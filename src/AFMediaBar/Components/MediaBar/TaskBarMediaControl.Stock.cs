@@ -88,6 +88,15 @@ public partial class TaskBarMediaControl
         _stockSnapshot = _stockSource?.Snapshot ?? StockTickerSnapshot.Empty;
         ApplyStockSettings();
         RefreshStockReadout();
+        var settings = PresentationSettings.StockTicker.Normalize();
+        AppLogService.Current?.Info("Stock", "设置变更: enabled=" + settings.Enabled + " codes=" + settings.Codes.Count +
+            " showName=" + settings.ShowName + " showPercent=" + settings.ShowPercent + " rotate=" + settings.RotateSeconds);
+        if (!IsLoaded) return;
+        // 显隐与长度必须立刻落地：只发尺寸请求时，宽度没变（例如长度模式为固定长度）会被指纹去重，几何就不会重算。
+        // Visibility and length have to land here: a size request alone can be deduplicated when the width does not change (for example
+        // with a fixed length), and then the geometry never reruns.
+        ApplyTaskbarSectionGeometry(_isVertical ? MainBorder.Height : MainBorder.Width);
+        RefreshDesiredSize();
     }
 
     private void StockChanged(object? sender, EventArgs args)

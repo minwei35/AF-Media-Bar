@@ -69,16 +69,19 @@ public sealed class LegacySettingsConfiguration(SettingsPageContext context, AFM
     {
         var next = settings.Normalize();
         var previous = current.StockTicker.Normalize();
-        // 开关从关到开时，旧设置文件里还没有这个组件的布局项，需要把隐式布局固定下来再写入，
-        // 否则新组件会以"不可见"补进布局，用户打开开关却看不到东西。
-        // While switching the component on, an older settings file has no layout entry for it: the implicit layout has to be frozen first,
-        // otherwise the component is appended as invisible and the user turns it on but sees nothing.
-        if (next.Enabled && !previous.Enabled) current.TaskbarExperience = ComponentLayoutPolicy.PreserveImplicitLayouts(current);
         current.StockTicker = next;
-        if (next.Enabled && !previous.Enabled)
+        // 总开关的两个方向都要写回布局：布局才是显隐的落地依据，只写"关→开"会让"开→关"停在可见状态。
+        // 旧设置文件里没有这个组件的布局项时，先把隐式布局固定下来再写，否则新组件会以"不可见"补进布局。
+        // Both directions write back to the layout, because the layout is what actually lands visibility: handling only the off-to-on
+        // transition leaves the ticker visible after switching it off. When an older settings file has no entry for the component, the
+        // implicit layout is frozen first, otherwise the component would be appended as invisible.
+        if (next.Enabled != previous.Enabled)
+        {
+            current.TaskbarExperience = ComponentLayoutPolicy.PreserveImplicitLayouts(current);
             foreach (var state in new[] { BarLayoutState.Resident, BarLayoutState.Idle })
                 current.TaskbarExperience = ComponentLayoutPolicy.SetVisible(current, state,
-                    TaskbarRestComponent.StockTicker, true);
+                    TaskbarRestComponent.StockTicker, next.Enabled);
+        }
     });
     public void SetPerformance(PerformanceComponentSettings settings) => Update(current =>
     {

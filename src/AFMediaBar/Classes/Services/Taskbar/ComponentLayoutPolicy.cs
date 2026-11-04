@@ -58,9 +58,17 @@ public static class ComponentLayoutPolicy
         var fixedItems = legacy.Where(entry => !CanMove(entry.Component)).Select(entry => entry.Component).ToArray();
         var ordered = fixedItems.Select(component => entries.Single(entry => entry.Component == component))
             .Concat(entries.Where(entry => CanMove(entry.Component))).ToArray();
+        // 盯盘组件的总开关是唯一权威：布局里存着的显隐（可能是旧版本补进来的"不可见"或已过期的"可见"）不能覆盖它，
+        // 否则关掉开关后那一格还在，或者打开开关后补不进布局。
+        // The stock ticker's master switch is the only authority: a stored layout entry — a stale "hidden" written by an older version or a
+        // stale "visible" left after switching off — must not override it.
+        ComponentLayoutEntry Gate(ComponentLayoutEntry entry) => entry.Component == TaskbarRestComponent.StockTicker
+            ? entry with { IsVisible = settings.StockTicker.Enabled }
+            : entry;
+        var gated = ordered.Select(Gate).ToArray();
         return state == BarLayoutState.Resident
-            ? ordered.Select(entry => entry.Component == TaskbarRestComponent.MediaText ? entry with { IsVisible = true } : entry).ToArray()
-            : ordered;
+            ? gated.Select(entry => entry.Component == TaskbarRestComponent.MediaText ? entry with { IsVisible = true } : entry).ToArray()
+            : gated;
     }
 
     public static IReadOnlyList<ComponentLayoutEntry> Resolve(AppSettings settings, BarLayoutState state) => ResolveAll(settings, state)

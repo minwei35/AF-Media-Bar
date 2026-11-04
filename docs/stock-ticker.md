@@ -47,6 +47,15 @@ Placement monitor=\.\DISPLAY1, visible=False, minimumPx=1028,
 
 1.6.2 修掉了一个事件注册缺失：`SettingsManager` 把每个设置属性的变更分门别类发事件，任务栏宿主只订阅 `ExtraFeaturesSettingsChanged`，而 `AppSettings.StockTicker` 原先没进这个 switch，于是改盯盘配置时任务栏不重排、开关关掉也不消失（悬浮条宿主订阅的是通用 `SettingsChanged`，所以它一直正常）。现在该属性归到 `ExtraFeaturesSettingsChanged`，并额外让控件与行情源各自监听变更即时生效。
 
+1.6.4 又补了两处，因为"关掉开关那一格还在"：
+
+- `LegacySettingsConfiguration.SetStockTicker` 原来只处理"关→开"方向，关掉时布局条目仍写着可见；现在两个方向都写回常驻与无媒体两份布局
+- `ComponentLayoutPolicy.ResolveAll` 增加一道闸：**盯盘组件的总开关是唯一权威**，布局里存着的显隐（旧版本补进来的"不可见"或过期"可见"）不能覆盖它，因此开关两个方向都立即生效
+- 控件在设置变更后直接重跑 `ApplyTaskbarSectionGeometry` + `RefreshDesiredSize`：只发尺寸请求时，宽度没变（例如长度模式为固定长度）会被指纹去重，几何就不会重算
+
+日志里能看到 `[Stock] 设置变更: enabled=… codes=… showName=… rotate=…`，用来确认事件是否到达控件。
+
+
 
 默认自选：`sh000001`（上证指数）、`sh600519`（贵州茅台）、`sz300750`（宁德时代）。
 
