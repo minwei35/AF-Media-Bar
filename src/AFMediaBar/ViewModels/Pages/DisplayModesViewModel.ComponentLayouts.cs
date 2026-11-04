@@ -58,6 +58,7 @@ public partial class DisplayModesViewModel
             TaskbarRestComponent.MediaText => SettingsPageKey.Lyrics,
             TaskbarRestComponent.Spectrum => SettingsPageKey.Spectrum,
             TaskbarRestComponent.BluetoothBattery => SettingsPageKey.BluetoothBattery,
+            TaskbarRestComponent.StockTicker => SettingsPageKey.StockTicker,
             TaskbarRestComponent.OutputDevice or TaskbarRestComponent.InputDevice => SettingsPageKey.DeviceManagement,
             TaskbarRestComponent.Volume => SettingsPageKey.Interaction,
             _ => SettingsPageKey.Performance
@@ -67,6 +68,7 @@ public partial class DisplayModesViewModel
             TaskbarRestComponent.MediaText => "Common.Group.MediaBarText",
             TaskbarRestComponent.Spectrum => "Widgets.Spectrum",
             TaskbarRestComponent.BluetoothBattery => "Battery.Title",
+            TaskbarRestComponent.StockTicker => "Widgets.Stock",
             TaskbarRestComponent.OutputDevice => "Common.OutputDevice",
             TaskbarRestComponent.InputDevice => "Common.InputDevice",
             TaskbarRestComponent.Volume => "Audio.Settings.Advanced",

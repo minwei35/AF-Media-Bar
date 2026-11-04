@@ -18,6 +18,7 @@ public sealed class ComponentSymbolConverter : IValueConverter
         TaskbarRestComponent.InputDevice => SymbolRegular.Mic24,
         TaskbarRestComponent.Volume => SymbolRegular.Speaker124,
         TaskbarRestComponent.BluetoothBattery => SymbolRegular.Bluetooth24,
+        TaskbarRestComponent.StockTicker => SymbolRegular.DataTrending24,
         TaskbarRestComponent.PreviousTrack => SymbolRegular.Previous24,
         TaskbarRestComponent.PlayPause => SymbolRegular.Play24,
         TaskbarRestComponent.NextTrack => SymbolRegular.Next24,
