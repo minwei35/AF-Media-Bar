@@ -24,6 +24,7 @@ public sealed class SettingsPageProvider(SettingsPageScopeCache cache, SettingsC
         [SettingsPageKey.Spectrum] = typeof(SpectrumPage),
         [SettingsPageKey.Performance] = typeof(PerformancePage),
         [SettingsPageKey.BluetoothBattery] = typeof(BluetoothBatteryPage),
+        [SettingsPageKey.StockTicker] = typeof(StockTickerPage),
         [SettingsPageKey.TrackNotifications] = typeof(TrackNotificationsPage),
         [SettingsPageKey.Configuration] = typeof(ConfigurationPage),
         [SettingsPageKey.Diagnostics] = typeof(DiagnosticsPage),

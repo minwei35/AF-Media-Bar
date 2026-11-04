@@ -21,6 +21,7 @@ public static class SettingsPageCatalog
         new SettingsPageDefinition(SettingsPageKey.Spectrum, "Settings.Page.Spectrum", "DataBarVertical24", true, DescriptionKey: "Settings.Page.Spectrum.Description"),
         new SettingsPageDefinition(SettingsPageKey.Performance, "Settings.Page.Performance", "Gauge24", true, DescriptionKey: "Settings.Page.Performance.Description"),
         new SettingsPageDefinition(SettingsPageKey.BluetoothBattery, "Settings.Page.BluetoothBattery", "Bluetooth24", true, DescriptionKey: "Settings.Page.BluetoothBattery.Description"),
+        new SettingsPageDefinition(SettingsPageKey.StockTicker, "Settings.Page.StockTicker", "DataTrending24", true, DescriptionKey: "Settings.Page.StockTicker.Description"),
         new SettingsPageDefinition(SettingsPageKey.ApplicationAppearance, "Common.Page.ApplicationAppearance", "Color24", true, DescriptionKey: "Settings.Personalization.Subtitle"),
         new SettingsPageDefinition(SettingsPageKey.Lyrics, "Settings.Page.TextAndLyrics", "TextQuote24", false, DescriptionKey: "Settings.Page.Lyrics.Description"),
         new SettingsPageDefinition(SettingsPageKey.Interaction, "Settings.Page.InteractionAndHotkeys", "HandDraw24", false, DescriptionKey: "Settings.Page.Interaction.Description"),

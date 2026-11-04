@@ -42,10 +42,32 @@ public sealed class StockQuoteService : IHostedService, IDisposable
     {
         lock (_gate)
         {
-            _timer ??= new Timer(OnTick, null, TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+            if (_timer is null)
+            {
+                _timer = new Timer(OnTick, null, TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+                // 自选或节奏一改就立刻重拉一次，用户不用等下一个周期；设置里改的东西必须马上看得见。
+                // A watchlist or cadence change triggers an immediate poll so the user does not wait for the next cycle.
+                SettingsManager.SettingsChanged += OnSettingsChanged;
+            }
         }
 
         return Task.CompletedTask;
+    }
+
+    private void OnSettingsChanged(object? sender, SettingsChangedEventArgs args)
+    {
+        if (args.PropertyName is not (null or nameof(AppSettings.StockTicker))) return;
+        if (_disposed) return;
+        try
+        {
+            lock (_gate)
+            {
+                _timer?.Change(TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
 
     /// <inheritdoc />
@@ -201,6 +223,7 @@ public sealed class StockQuoteService : IHostedService, IDisposable
         {
             if (_disposed) return;
             _disposed = true;
+            SettingsManager.SettingsChanged -= OnSettingsChanged;
             _timer?.Dispose();
             _timer = null;
         }

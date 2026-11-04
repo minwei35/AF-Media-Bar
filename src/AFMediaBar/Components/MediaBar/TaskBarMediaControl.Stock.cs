@@ -45,6 +45,8 @@ public partial class TaskBarMediaControl
     {
         if (_stockSource is null || _stockSubscribed) return;
         _stockSource.Changed += StockChanged;
+        SettingsManager.SettingsChanged -= StockSettingsChanged;
+        SettingsManager.SettingsChanged += StockSettingsChanged;
         _stockSubscribed = true;
         _stockRotation ??= new DispatcherTimer(DispatcherPriority.Background, Dispatcher);
         _stockRotation.Tick -= StockRotation_Tick;
@@ -58,12 +60,34 @@ public partial class TaskBarMediaControl
     private void DetachStockSource()
     {
         if (_stockSubscribed && _stockSource is not null) _stockSource.Changed -= StockChanged;
+        SettingsManager.SettingsChanged -= StockSettingsChanged;
         _stockSubscribed = false;
         if (_stockRotation is not null)
         {
             _stockRotation.Stop();
             _stockRotation.Tick -= StockRotation_Tick;
         }
+    }
+
+    /// <summary>
+    /// 盯盘设置一改就重读，不等下一次行情：显示项、轮换节奏与自选列表立即生效；
+    /// 开关与顺序变化由宿主重排布局（SettingsManager 把该属性归到 ExtraFeaturesSettingsChanged）。
+    /// Rereads the ticker settings as soon as they change instead of waiting for the next quote: the readout options, the rotation cadence,
+    /// and the watchlist apply immediately, while switch and order changes are re-laid out by the host.
+    /// </summary>
+    private void StockSettingsChanged(object? sender, SettingsChangedEventArgs args)
+    {
+        if (args.PropertyName is not (null or nameof(AppSettings.StockTicker))) return;
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(new Action(() => StockSettingsChanged(sender, args)), DispatcherPriority.Background);
+            return;
+        }
+
+        _stockIndex = 0;
+        _stockSnapshot = _stockSource?.Snapshot ?? StockTickerSnapshot.Empty;
+        ApplyStockSettings();
+        RefreshStockReadout();
     }
 
     private void StockChanged(object? sender, EventArgs args)

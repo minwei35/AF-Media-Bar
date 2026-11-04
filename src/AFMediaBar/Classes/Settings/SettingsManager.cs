@@ -401,7 +401,8 @@ public static class SettingsManager
             case nameof(AppSettings.MediaSelection):
             case nameof(AppSettings.QuickLaunch):
             case nameof(AppSettings.SpectrumComponent):
-            case nameof(AppSettings.PerformanceComponent): ExtraFeaturesSettingsChanged?.Invoke(null, EventArgs.Empty); break;
+            case nameof(AppSettings.PerformanceComponent):
+            case nameof(AppSettings.StockTicker): ExtraFeaturesSettingsChanged?.Invoke(null, EventArgs.Empty); break;
             case nameof(AppSettings.Update): UpdateSettingsChanged?.Invoke(null, EventArgs.Empty); break;
             case nameof(AppSettings.TaskbarTargetMonitorDeviceIds):
             case nameof(AppSettings.TaskbarTargetMonitorDeviceId): TaskbarTargetMonitorChanged?.Invoke(null, EventArgs.Empty); break;

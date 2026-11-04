@@ -9,7 +9,8 @@ internal static class SettingsSectionResetPolicy
     public static bool Handles(SettingsResetScope scope) => scope is SettingsResetScope.BarAppearance or SettingsResetScope.TextAndLyrics
         or SettingsResetScope.QuickControls or SettingsResetScope.FullPanel or SettingsResetScope.QuickLaunch
         or SettingsResetScope.Spectrum or SettingsResetScope.Performance or SettingsResetScope.BluetoothBattery
-        or SettingsResetScope.MediaSource or SettingsResetScope.TrackNotifications;
+        or SettingsResetScope.MediaSource or SettingsResetScope.TrackNotifications
+        or SettingsResetScope.StockTicker;
 
     public static AppSettings Apply(AppSettings current, AppSettings defaults, SettingsResetScope scope)
     {
@@ -84,6 +85,10 @@ internal static class SettingsSectionResetPolicy
                 next.MediaSelection = defaults.MediaSelection;
                 break;
             case SettingsResetScope.TrackNotifications: next.TrackChangeNotification = defaults.TrackChangeNotification; break;
+            case SettingsResetScope.StockTicker:
+                // 自选股是用户数据，重置只恢复节奏与显示项；开关也保留，避免重置后组件忽然消失。
+                next.StockTicker = defaults.StockTicker with { Codes = current.StockTicker.Codes, Enabled = current.StockTicker.Enabled };
+                break;
             default: throw new ArgumentOutOfRangeException(nameof(scope));
         }
         return next;

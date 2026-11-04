@@ -324,6 +324,7 @@ namespace AFMediaBar
                 services.AddScoped<SpectrumPage>();
                 services.AddScoped<PerformancePage>();
                 services.AddScoped<BluetoothBatteryPage>();
+                services.AddScoped<StockTickerPage>();
                 services.AddScoped<TrackNotificationsPage>();
                 services.AddScoped<ConfigurationPage>();
                 services.AddScoped<DiagnosticsPage>();

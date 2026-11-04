@@ -60,6 +60,9 @@ public enum SettingsPageKey
     Diagnostics,
     MemoryTools,
     QuickStart,
+
+    /// <summary>盯盘组件设置页：自选股、刷新与轮换节奏、读数显示项。/ Stock ticker page: watchlist, refresh and rotation cadence, readout options.</summary>
+    StockTicker,
 }
 
 /// <summary>

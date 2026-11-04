@@ -10,7 +10,7 @@ namespace AFMediaBar.Classes.Settings;
 
 /// <summary>设置重置范围。 / Settings reset scope.</summary>
 public enum SettingsResetScope { General, Appearance, Layout, DisplayModes, ExtraFeatures, Interaction, Lyrics, All, Components, ContentLayout, DeviceManagement, RestState,
-    BarAppearance, TextAndLyrics, QuickControls, FullPanel, QuickLaunch, Spectrum, Performance, BluetoothBattery, MediaSource, TrackNotifications }
+    BarAppearance, TextAndLyrics, QuickControls, FullPanel, QuickLaunch, Spectrum, Performance, BluetoothBattery, MediaSource, TrackNotifications, StockTicker }
 
 /// <summary>设置变更通知参数。 / Settings change notification arguments.</summary>
 public sealed class SettingsChangedEventArgs(SettingsResetScope? resetScope = null, string? propertyName = null) : EventArgs

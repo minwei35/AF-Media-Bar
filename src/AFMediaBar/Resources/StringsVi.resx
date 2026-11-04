@@ -3923,4 +3923,10 @@ Bảng đầy đủ mở bằng nhấp hoặc di chuột. Pin Bluetooth vẫn l�
   <data name="Stock.NoWatchlist" xml:space="preserve"><value>Chưa cấu hình danh mục</value></data>
   <data name="Stock.Loading" xml:space="preserve"><value>Đang tải dữ liệu</value></data>
   <data name="Stock.Unavailable" xml:space="preserve"><value>Không lấy được dữ liệu</value></data>
+  <data name="Settings.Page.StockTicker" xml:space="preserve"><value>Bảng giá cổ phiếu</value></data>
+  <data name="Settings.Page.StockTicker.Description" xml:space="preserve"><value>Dữ liệu danh mục theo dõi trên thanh tác vụ: danh mục, chu kỳ làm mới và luân phiên, mục hiển thị</value></data>
+  <data name="Stock.Cadence.Title" xml:space="preserve"><value>Làm mới và luân phiên</value></data>
+  <data name="Stock.Cadence.Description" xml:space="preserve"><value>Bao lâu lấy dữ liệu một lần và bao lâu đổi mã một lần</value></data>
+  <data name="Stock.Readout.Title" xml:space="preserve"><value>Nội dung hiển thị</value></data>
+  <data name="Stock.Readout.Description" xml:space="preserve"><value>Thành phần hiển thị gì và dùng màu nào cho tăng và giảm</value></data>
 </root>
