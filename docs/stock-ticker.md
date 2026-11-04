@@ -89,3 +89,31 @@ dotnet publish src\AFMediaBar\AFMediaBar.csproj -c Release -r win-x64 --self-con
 | 任务栏实际显示 | **待你在真实桌面上验收**：本机任务栏被全屏窗口遮住（自动隐藏），无法截图确认 |
 
 实机验收建议：跑起来后在 `设置 → 小组件 → 盯盘组件` 打开开关，看媒体栏右侧是否出现两行读数；再试竖向任务栏、无音乐状态、点击切下一只。
+
+## 在另一台已经装了 AF Media Bar 的机器上怎么用
+
+### 路线 A：直接换程序（不需要源码和 SDK，推荐）
+
+1. 拷 `AFMediaBar-stock-ticker.exe`（自包含单文件，约 117 MB，内置 .NET 运行时）到那台机器任意目录。
+2. 先退出已安装版：托盘图标右键 → 退出，确认任务栏媒体条消失（**不要两个同时跑**，否则会各挂一条媒体条并争抢全局热键）。
+3. 双击新 exe 运行。设置、自选股、布局都在 `%LOCALAPPDATA%\AFMediaBar\settings.json`，两个版本共用同一份，不需要迁移。
+4. 去 `设置 → 小组件 → 盯盘组件` 把开关打开（已装过旧版的配置里没有这个组件的布局项，会以"未启用"补齐）。
+5. 想回退：退出它，直接启动原来的安装版即可；安装版的注册表项与卸载信息没有被改动。
+
+### 路线 B：源码 + 补丁（那台机器有 .NET 10 SDK 时）
+
+```powershell
+git clone https://github.com/minwei35/my-stock-bar.git af-media-bar
+cd af-media-bar
+git checkout stock-ticker          # 已经在分支上，无需再打补丁
+dotnet build src\AFMediaBar\AFMediaBar.csproj -c Debug
+```
+
+如果手上是上游源码而不是这个分支，用补丁文件：
+
+```powershell
+git apply --3way AF-Media-Bar-stock-ticker.patch
+```
+
+（`docs/third-party-audio-notices.md` 是新增文件，补丁里带上了；上游 main 缺它，编译会报 CS1566。）
+
