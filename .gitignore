@@ -10,3 +10,6 @@ dist-folder/
 /docs/ai-development/
 docs/layout-editor-demo.html
 .backup/
+
+# 用户机上的运行日志（诊断时临时拷进来，不入库）
+app.log
