@@ -1285,6 +1285,7 @@ namespace AFMediaBar.Components
             PlaceRestWidget(TaskbarSpectrumHoverSurface, layout.Find(TaskbarRestComponent.Spectrum), hoverHeight);
             PlaceRestWidget(TaskbarPerformanceHoverSurface, layout.Find(TaskbarRestComponent.Performance), hoverHeight);
             PlaceRestWidget(TaskbarBatterySurface, layout.Find(TaskbarRestComponent.BluetoothBattery), hoverHeight);
+            PlaceRestWidget(TaskbarStockSurface, layout.Find(TaskbarRestComponent.StockTicker), hoverHeight);
             PlaceRestWidget(TaskbarOutputDeviceHoverSurface, layout.Find(TaskbarRestComponent.OutputDevice), hoverHeight);
             PlaceRestWidget(TaskbarInputDeviceHoverSurface, layout.Find(TaskbarRestComponent.InputDevice), hoverHeight);
             PlaceRestWidget(TaskbarVolumeHoverSurface, layout.Find(TaskbarRestComponent.Volume), hoverHeight);
@@ -1357,6 +1358,7 @@ namespace AFMediaBar.Components
             SetRestComponentVisible(TaskbarPerformanceHoverSurface, performanceVisible);
             SetRestComponentVisible(TaskbarPerformanceSurface, performanceVisible);
             SetRestComponentVisible(TaskbarBatterySurface, Visible(TaskbarRestComponent.BluetoothBattery));
+            SetRestComponentVisible(TaskbarStockSurface, Visible(TaskbarRestComponent.StockTicker));
             SetRestComponentVisible(ResidentPreviousSurface, Visible(TaskbarRestComponent.PreviousTrack));
             SetRestComponentVisible(ResidentPlayPauseSurface, Visible(TaskbarRestComponent.PlayPause));
             SetRestComponentVisible(ResidentNextSurface, Visible(TaskbarRestComponent.NextTrack));
@@ -1449,7 +1451,8 @@ namespace AFMediaBar.Components
                 experience.PerformanceVisible,
                 experience.OutputDeviceVisible,
                 experience.VolumeVisible,
-                experience.ArtworkVisible, experience.InputDeviceVisible, _batteryCanShow);
+                experience.ArtworkVisible, experience.InputDeviceVisible, _batteryCanShow,
+                PresentationSettings.StockTicker.Enabled);
 
         /// <summary>
         /// 一个静置层组件占用的固定宽度；媒体文字不吃固定宽度，它取剩余长度。
@@ -1463,6 +1466,7 @@ namespace AFMediaBar.Components
             TaskbarRestComponent.DragHandle => ComponentLayoutPolicy.HandleLength,
             _ when ComponentLayoutPolicy.IsMetric(component) => MetricPrimarySize(component, false),
             TaskbarRestComponent.BluetoothBattery => BatterySurfaceWidth,
+            TaskbarRestComponent.StockTicker => StockSurfaceWidth,
             TaskbarRestComponent.OutputDevice => metrics.ButtonSize + TaskbarWidgetPadding * 2,
             TaskbarRestComponent.InputDevice => metrics.ButtonSize + TaskbarWidgetPadding * 2,
             TaskbarRestComponent.Volume => metrics.ButtonSize + TaskbarWidgetPadding * 2,

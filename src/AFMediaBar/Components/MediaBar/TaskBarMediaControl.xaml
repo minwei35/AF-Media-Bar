@@ -412,6 +412,47 @@
                     <TextBlock x:Name="TaskbarBatteryText" Text="—" FontSize="12" VerticalAlignment="Center" Foreground="{Binding Foreground, ElementName=SongTitle}"/>
                 </StackPanel>
             </Border>
+            <!--
+                盯盘组件：两行读数（简称 / 最新价 + 涨跌幅）。宽度由 ResolveRestComponentWidth 给出，
+                位置由静置层顺序写入 Margin.Left，因此这里 MUST 保持 Left 对齐。
+                The stock ticker: two text rows (name / last price + change). Its width comes from ResolveRestComponentWidth and its
+                position is written into Margin.Left by the rest-layer order, so Left alignment is required here.
+            -->
+            <Border x:Name="TaskbarStockSurface"
+                    Panel.ZIndex="4"
+                    Width="96"
+                    Height="32"
+                    Margin="0"
+                    Padding="1,1,1,2.25"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    CornerRadius="5"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0,1.25,0,0"
+                    Visibility="Collapsed"
+                    Cursor="Hand"
+                    Tag="MediaAction"
+                    MouseEnter="TaskbarStockSurface_MouseEnter"
+                    MouseLeave="TaskbarStockSurface_MouseLeave"
+                    MouseLeftButtonUp="TaskbarStockSurface_MouseLeftButtonUp">
+                <StackPanel x:Name="TaskbarStockContent"
+                            Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False">
+                    <TextBlock x:Name="TaskbarStockName"
+                               FontSize="10"
+                               TextAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{Binding Foreground, ElementName=SongTitle}" />
+                    <TextBlock x:Name="TaskbarStockValue"
+                               FontSize="12"
+                               TextAlignment="Center"
+                               FontWeight="{DynamicResource AppTextMediumFontWeight}"
+                               Foreground="{Binding Foreground, ElementName=SongTitle}" />
+                </StackPanel>
+            </Border>
             <Border x:Name="TaskbarOutputDeviceHoverSurface"
                     Panel.ZIndex="4"
                     Width="26"

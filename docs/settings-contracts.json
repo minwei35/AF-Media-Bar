@@ -306,6 +306,16 @@
       "notifications": "v1.6.0",
       "lowThreshold": "v1.6.0"
     },
+    "stockTicker": {
+      "$release": "unreleased",
+      "enabled": "unreleased",
+      "codes": "unreleased",
+      "refreshSeconds": "unreleased",
+      "rotateSeconds": "unreleased",
+      "showName": "unreleased",
+      "showPercent": "unreleased",
+      "swapColors": "unreleased"
+    },
     "systemMemoryOptimization": {
       "$release": "v1.6.0",
       "timerEnabled": "v1.6.0",

@@ -3864,4 +3864,26 @@ The full-panel entry opens on click or hover. Bluetooth battery remains an exper
   <data name="Settings.Reorder.MediaBarHelp" xml:space="preserve"><value>Drag to reorder. You can also drag components directly on the media bar.</value></data>
   <data name="ComponentLayout.Parallel" xml:space="preserve"><value>Parallel metrics and order</value></data>
   <data name="ComponentLayout.ParallelDescription" xml:space="preserve"><value>Shares visibility and order with the resident layout in At rest. Configure the no-media layout separately on that page.</value></data>
+  <data name="Stock.Title" xml:space="preserve"><value>Stock ticker</value></data>
+  <data name="Stock.Description" xml:space="preserve"><value>Shows the watchlist last price and change inside the taskbar media bar, rotating on the configured interval; playback is not required.</value></data>
+  <data name="Stock.Enabled.Title" xml:space="preserve"><value>Show the stock ticker</value></data>
+  <data name="Stock.Enabled.Description" xml:space="preserve"><value>Turning it off removes the component from the bar and stops quote polling.</value></data>
+  <data name="Stock.Watchlist.Title" xml:space="preserve"><value>Watchlist</value></data>
+  <data name="Stock.Watchlist.Description" xml:space="preserve"><value>Separate codes with spaces or commas. Plain numbers get their market from the first digit (6 = Shanghai, 0/1/2/3 = Shenzhen).</value></data>
+  <data name="Stock.Watchlist.Hint" xml:space="preserve"><value>For example sh000001 sh600519 sz300750</value></data>
+  <data name="Stock.Watchlist.Summary" xml:space="preserve"><value>{0} instrument(s)</value></data>
+  <data name="Stock.Refresh.Title" xml:space="preserve"><value>Refresh interval</value></data>
+  <data name="Stock.Refresh.Description" xml:space="preserve"><value>Quotes are polled at this interval during trading hours and degrade to 60 seconds after the close.</value></data>
+  <data name="Stock.Rotate.Title" xml:space="preserve"><value>Rotation interval</value></data>
+  <data name="Stock.Rotate.Description" xml:space="preserve"><value>The component fits one instrument, rotating on this interval; click the component to advance immediately.</value></data>
+  <data name="Stock.ShowName.Title" xml:space="preserve"><value>Show the instrument name</value></data>
+  <data name="Stock.ShowName.Description" xml:space="preserve"><value>When off, only the price and change are shown.</value></data>
+  <data name="Stock.ShowPercent.Title" xml:space="preserve"><value>Show the change</value></data>
+  <data name="Stock.ShowPercent.Description" xml:space="preserve"><value>When off, only the last price is shown.</value></data>
+  <data name="Stock.SwapColors.Title" xml:space="preserve"><value>Green up, red down</value></data>
+  <data name="Stock.SwapColors.Description" xml:space="preserve"><value>By default the mainland convention applies (red up, green down); turn this on for the western convention.</value></data>
+  <data name="Stock.Placeholder" xml:space="preserve"><value>N/A</value></data>
+  <data name="Stock.NoWatchlist" xml:space="preserve"><value>No watchlist configured</value></data>
+  <data name="Stock.Loading" xml:space="preserve"><value>Loading quotes</value></data>
+  <data name="Stock.Unavailable" xml:space="preserve"><value>Quotes unavailable</value></data>
 </root>

@@ -65,6 +65,21 @@ public sealed class LegacySettingsConfiguration(SettingsPageContext context, AFM
         };
     });
     public void SetSpectrum(SpectrumComponentSettings settings) => Update(current => current.SpectrumComponent = settings.Normalize());
+    public void SetStockTicker(StockTickerSettings settings) => Update(current =>
+    {
+        var next = settings.Normalize();
+        var previous = current.StockTicker.Normalize();
+        // 开关从关到开时，旧设置文件里还没有这个组件的布局项，需要把隐式布局固定下来再写入，
+        // 否则新组件会以"不可见"补进布局，用户打开开关却看不到东西。
+        // While switching the component on, an older settings file has no layout entry for it: the implicit layout has to be frozen first,
+        // otherwise the component is appended as invisible and the user turns it on but sees nothing.
+        if (next.Enabled && !previous.Enabled) current.TaskbarExperience = ComponentLayoutPolicy.PreserveImplicitLayouts(current);
+        current.StockTicker = next;
+        if (next.Enabled && !previous.Enabled)
+            foreach (var state in new[] { BarLayoutState.Resident, BarLayoutState.Idle })
+                current.TaskbarExperience = ComponentLayoutPolicy.SetVisible(current, state,
+                    TaskbarRestComponent.StockTicker, true);
+    });
     public void SetPerformance(PerformanceComponentSettings settings) => Update(current =>
     {
         var next = settings.Normalize();

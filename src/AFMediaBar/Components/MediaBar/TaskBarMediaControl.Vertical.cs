@@ -108,6 +108,7 @@ public partial class TaskBarMediaControl
         TaskbarRestComponent.DragHandle => ComponentLayoutPolicy.HandleLength,
         _ when ComponentLayoutPolicy.IsMetric(component) => MetricPrimarySize(component, true),
         TaskbarRestComponent.BluetoothBattery => BatteryVerticalLength,
+        TaskbarRestComponent.StockTicker => StockVerticalLength,
         TaskbarRestComponent.PreviousTrack or TaskbarRestComponent.PlayPause or TaskbarRestComponent.NextTrack or
         TaskbarRestComponent.OutputDevice or TaskbarRestComponent.InputDevice or TaskbarRestComponent.Volume =>
             VerticalAudioButtonSize(metrics) + RestWidgetVerticalInset(TaskbarOutputDeviceHoverSurface),
@@ -182,6 +183,7 @@ public partial class TaskBarMediaControl
         Place(TaskbarSpectrumHoverSurface, TaskbarRestComponent.Spectrum);
         Place(TaskbarPerformanceHoverSurface, TaskbarRestComponent.Performance);
         Place(TaskbarBatterySurface, TaskbarRestComponent.BluetoothBattery);
+        Place(TaskbarStockSurface, TaskbarRestComponent.StockTicker);
         Place(TaskbarOutputDeviceHoverSurface, TaskbarRestComponent.OutputDevice);
         Place(TaskbarInputDeviceHoverSurface, TaskbarRestComponent.InputDevice);
         Place(TaskbarVolumeHoverSurface, TaskbarRestComponent.Volume);

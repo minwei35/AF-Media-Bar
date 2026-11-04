@@ -80,7 +80,10 @@ public enum TaskbarRestComponent
     DragHandle = 13,
     PreviousTrack = 14,
     PlayPause = 15,
-    NextTrack = 16
+    NextTrack = 16,
+
+    /// <summary>盯盘组件：按自选列表轮换显示最新价与涨跌幅。 / Stock ticker component: rotates through the watchlist showing the last price and change.</summary>
+    StockTicker = 17
 }
 
 /// <summary>播放器表面的基础背景方案。 / Basic background style for a player surface.</summary>

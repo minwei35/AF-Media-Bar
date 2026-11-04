@@ -181,6 +181,10 @@ namespace AFMediaBar
                 services.AddSingleton<BluetoothBatteryReader>();
                 services.AddSingleton<BluetoothBatteryService>();
                 services.AddHostedService(sp => sp.GetRequiredService<BluetoothBatteryService>());
+                // 盯盘行情源：应用级单例，多个任务栏/悬浮宿主共享同一份快照与轮询节奏。
+                // The quote source is an application-level singleton: several taskbar or floating hosts share one snapshot and cadence.
+                services.AddSingleton<AFMediaBar.Classes.Services.StockQuoteService>();
+                services.AddHostedService(sp => sp.GetRequiredService<AFMediaBar.Classes.Services.StockQuoteService>());
                 services.AddSingleton<AudioDeviceService>();
                 services.AddSingleton<IAudioDeviceCatalog>(sp => sp.GetRequiredService<AudioDeviceService>());
                 services.AddSingleton<ApplicationAudioRoutingService>();
@@ -348,6 +352,7 @@ namespace AFMediaBar
                 services.AddScoped<ExperimentalViewModel>();
                 services.AddScoped<AudioDeviceSettingsViewModel>();
                 services.AddScoped<BluetoothBatterySettingsViewModel>();
+                services.AddScoped<StockTickerSettingsViewModel>();
                 services.AddScoped<AudioDeviceHotkeySettingsViewModel>();
                 services.AddScoped<InteractionViewModel>();
 

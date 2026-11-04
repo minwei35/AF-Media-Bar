@@ -127,6 +127,34 @@
                     </WrapPanel>
                 </StackPanel>
             </components:SettingsGroup>
+            <components:SettingsGroup GroupId="Widgets.Stock" Header="{DynamicResource Loc.Stock.Title}" Description="{DynamicResource Loc.Stock.Description}" Icon="{ui:SymbolIcon DataTrending24}">
+                <StackPanel>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.Enabled.Description}" Icon="{ui:SymbolIcon DataTrending24}" Title="{DynamicResource Loc.Stock.Enabled.Title}" KeepControlInline="True">
+                        <ui:ToggleSwitch IsChecked="{Binding ViewModel.Stock.Enabled, Mode=TwoWay}"/>
+                    </components:SettingsRow>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.Watchlist.Description}" Icon="{ui:SymbolIcon TextBulletListSquare24}" Title="{DynamicResource Loc.Stock.Watchlist.Title}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Width="220" Text="{Binding ViewModel.Stock.WatchlistText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" ToolTip="{DynamicResource Loc.Stock.Watchlist.Hint}"/>
+                            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Style="{StaticResource AfSettingsRowValueStyle}" Text="{Binding ViewModel.Stock.WatchlistSummary}"/>
+                        </StackPanel>
+                    </components:SettingsRow>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.Refresh.Description}" Icon="{ui:SymbolIcon Timer24}" Title="{DynamicResource Loc.Stock.Refresh.Title}">
+                        <components:SettingsNumericEditor Value="{Binding ViewModel.Stock.RefreshSeconds, Mode=TwoWay}" Minimum="{Binding ViewModel.Stock.MinimumRefreshSeconds}" Maximum="{Binding ViewModel.Stock.MaximumRefreshSeconds}" Step="{Binding ViewModel.Stock.RefreshStepSeconds}" Unit="{DynamicResource Loc.Settings.Numeric.Seconds}"/>
+                    </components:SettingsRow>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.Rotate.Description}" Icon="{ui:SymbolIcon ArrowSync24}" Title="{DynamicResource Loc.Stock.Rotate.Title}">
+                        <components:SettingsNumericEditor Value="{Binding ViewModel.Stock.RotateSeconds, Mode=TwoWay}" Minimum="{Binding ViewModel.Stock.MinimumRotateSeconds}" Maximum="{Binding ViewModel.Stock.MaximumRotateSeconds}" Step="{Binding ViewModel.Stock.RotateStepSeconds}" Unit="{DynamicResource Loc.Settings.Numeric.Seconds}"/>
+                    </components:SettingsRow>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.ShowName.Description}" Title="{DynamicResource Loc.Stock.ShowName.Title}" KeepControlInline="True">
+                        <ui:ToggleSwitch IsChecked="{Binding ViewModel.Stock.ShowName, Mode=TwoWay}"/>
+                    </components:SettingsRow>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.ShowPercent.Description}" Title="{DynamicResource Loc.Stock.ShowPercent.Title}" KeepControlInline="True">
+                        <ui:ToggleSwitch IsChecked="{Binding ViewModel.Stock.ShowPercent, Mode=TwoWay}"/>
+                    </components:SettingsRow>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.SwapColors.Description}" Title="{DynamicResource Loc.Stock.SwapColors.Title}" KeepControlInline="True">
+                        <ui:ToggleSwitch IsChecked="{Binding ViewModel.Stock.SwapColors, Mode=TwoWay}"/>
+                    </components:SettingsRow>
+                </StackPanel>
+            </components:SettingsGroup>
 
         </StackPanel>
     </components:SettingsPageLayout>

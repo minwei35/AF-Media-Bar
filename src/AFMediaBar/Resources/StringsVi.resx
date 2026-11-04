@@ -3901,4 +3901,26 @@ Bảng đầy đủ mở bằng nhấp hoặc di chuột. Pin Bluetooth vẫn l�
   <data name="Settings.Reorder.MediaBarHelp" xml:space="preserve"><value>Kéo để đổi thứ tự. Bạn cũng có thể kéo các thành phần trực tiếp trên thanh phương tiện.</value></data>
   <data name="ComponentLayout.Parallel" xml:space="preserve"><value>Chỉ số song song và thứ tự</value></data>
   <data name="ComponentLayout.ParallelDescription" xml:space="preserve"><value>Dùng chung hiển thị và thứ tự với bố cục thường trực trong trang Thường trực. Chỉnh bố cục khi không có phương tiện riêng trên trang đó.</value></data>
+  <data name="Stock.Title" xml:space="preserve"><value>Bảng giá cổ phiếu</value></data>
+  <data name="Stock.Description" xml:space="preserve"><value>Hiển thị giá mới nhất và mức thay đổi của danh mục theo dõi ngay trên thanh tác vụ, luân phiên theo số giây đã đặt; không cần đang phát nhạc.</value></data>
+  <data name="Stock.Enabled.Title" xml:space="preserve"><value>Hiện bảng giá</value></data>
+  <data name="Stock.Enabled.Description" xml:space="preserve"><value>Tắt sẽ gỡ thành phần khỏi thanh và dừng việc lấy dữ liệu.</value></data>
+  <data name="Stock.Watchlist.Title" xml:space="preserve"><value>Danh mục theo dõi</value></data>
+  <data name="Stock.Watchlist.Description" xml:space="preserve"><value>Phân tách mã bằng dấu cách hoặc dấu phẩy. Mã chỉ có số sẽ được suy ra sàn theo chữ số đầu (6 = Thượng Hải, 0/1/2/3 = Thâm Quyến).</value></data>
+  <data name="Stock.Watchlist.Hint" xml:space="preserve"><value>Ví dụ sh000001 sh600519 sz300750</value></data>
+  <data name="Stock.Watchlist.Summary" xml:space="preserve"><value>{0} mã</value></data>
+  <data name="Stock.Refresh.Title" xml:space="preserve"><value>Chu kỳ làm mới</value></data>
+  <data name="Stock.Refresh.Description" xml:space="preserve"><value>Trong giờ giao dịch dữ liệu được lấy theo chu kỳ này; sau khi đóng cửa tự giảm xuống 60 giây.</value></data>
+  <data name="Stock.Rotate.Title" xml:space="preserve"><value>Chu kỳ luân phiên</value></data>
+  <data name="Stock.Rotate.Description" xml:space="preserve"><value>Thành phần chỉ đủ chỗ cho một mã, luân phiên theo chu kỳ này; bấm vào để chuyển ngay.</value></data>
+  <data name="Stock.ShowName.Title" xml:space="preserve"><value>Hiện tên mã</value></data>
+  <data name="Stock.ShowName.Description" xml:space="preserve"><value>Khi tắt chỉ hiển thị giá và mức thay đổi.</value></data>
+  <data name="Stock.ShowPercent.Title" xml:space="preserve"><value>Hiện mức thay đổi</value></data>
+  <data name="Stock.ShowPercent.Description" xml:space="preserve"><value>Khi tắt chỉ hiển thị giá mới nhất.</value></data>
+  <data name="Stock.SwapColors.Title" xml:space="preserve"><value>Xanh tăng, đỏ giảm</value></data>
+  <data name="Stock.SwapColors.Description" xml:space="preserve"><value>Mặc định theo quy ước Trung Quốc đại lục (đỏ tăng, xanh giảm); bật để đảo màu.</value></data>
+  <data name="Stock.Placeholder" xml:space="preserve"><value>—</value></data>
+  <data name="Stock.NoWatchlist" xml:space="preserve"><value>Chưa cấu hình danh mục</value></data>
+  <data name="Stock.Loading" xml:space="preserve"><value>Đang tải dữ liệu</value></data>
+  <data name="Stock.Unavailable" xml:space="preserve"><value>Không lấy được dữ liệu</value></data>
 </root>

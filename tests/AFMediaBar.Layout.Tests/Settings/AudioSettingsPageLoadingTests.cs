@@ -75,7 +75,8 @@ public sealed class AudioSettingsPageLoadingTests
                 using var quickLaunch = new AFMediaBar.Classes.Services.QuickLaunchService();
                 using var note = new QuickLaunchSettingsViewModel(quickLaunch, configuration, localization);
                 using var layout = new TaskbarAppearanceViewModel(configuration, new AFMediaBar.Classes.Services.TaskbarLengthConstraintsService(), localization);
-                var widgetsModel = new WidgetsSettingsViewModel(components, batteryEditor, note, configuration, layout);
+                using var stockEditor = new StockTickerSettingsViewModel(configuration, localization);
+                var widgetsModel = new WidgetsSettingsViewModel(components, batteryEditor, stockEditor, note, configuration, layout);
                 await widgetsModel.RefreshAsync();
                 var widgets = new WidgetsSettingsPage(widgetsModel);
                 widgets.Measure(new Size(820, 900));

@@ -127,7 +127,11 @@ public static class ComponentLayoutPolicy
         }
         var idle = TaskbarRestLayoutPolicy.ResolveIdleComponents(experience.IdleComponents);
         var selected = settings.PerformanceComponent.Normalize();
-        bool Visible(TaskbarRestComponent component) => state == BarLayoutState.Idle ? idle.Contains(component) : component switch
+        bool Visible(TaskbarRestComponent component) => component == TaskbarRestComponent.StockTicker
+            // 盯盘组件不看媒体状态：没有媒体时它照样要显示，否则一停歌就看不见自选股。
+            // The stock ticker ignores the media state: it has to stay visible with no media, otherwise the watchlist disappears as soon as playback stops.
+            ? settings.StockTicker.Enabled
+            : state == BarLayoutState.Idle ? idle.Contains(component) : component switch
         {
             TaskbarRestComponent.Artwork => experience.ArtworkVisible,
             TaskbarRestComponent.MediaText => true,
@@ -137,6 +141,7 @@ public static class ComponentLayoutPolicy
             TaskbarRestComponent.InputDevice => experience.InputDeviceVisible,
             TaskbarRestComponent.Volume => experience.VolumeVisible,
             TaskbarRestComponent.BluetoothBattery => settings.BluetoothBatteryWidget.Enabled,
+            TaskbarRestComponent.StockTicker => settings.StockTicker.Enabled,
             _ => false
         };
         var entries = new List<ComponentLayoutEntry>();

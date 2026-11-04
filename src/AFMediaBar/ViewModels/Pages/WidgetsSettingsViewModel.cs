@@ -8,6 +8,7 @@ namespace AFMediaBar.ViewModels.Pages;
 public sealed class WidgetsSettingsViewModel(
     ComponentsSettingsViewModel components,
     BluetoothBatterySettingsViewModel battery,
+    StockTickerSettingsViewModel stock,
     QuickLaunchSettingsViewModel note,
     ISettingsConfiguration configuration,
     TaskbarAppearanceViewModel layout)
@@ -15,6 +16,7 @@ public sealed class WidgetsSettingsViewModel(
     public QuickLaunchSettingsViewModel Note { get; } = note;
     public ComponentsSettingsViewModel Components { get; } = components;
     public BluetoothBatterySettingsViewModel Battery { get; } = battery;
+    public StockTickerSettingsViewModel Stock { get; } = stock;
     public TaskbarAppearanceViewModel Layout { get; } = layout;
     public CancellationToken ContextCancellationToken => configuration.CancellationToken;
 

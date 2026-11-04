@@ -116,7 +116,8 @@ public sealed partial class FloatingBarWindow : Window, IBarRuntimeHost
         WindowAppearanceService appearance, ScreenBackgroundSampler sampler, AppLogService log, FloatingBarLengthConstraints lengthConstraints,
         Func<ExternalFullPanelHandleWindow>? externalFullPanelHandleFactory = null,
         QuickLaunchService? quickLaunch = null,
-        QuickLaunchIconService? quickLaunchIcons = null)
+        QuickLaunchIconService? quickLaunchIcons = null,
+        AFMediaBar.Classes.Services.StockQuoteService? stockSource = null)
     {
         _quickLaunch = quickLaunch;
         TargetMonitorDeviceId = targetMonitorDeviceId;
@@ -141,6 +142,7 @@ public sealed partial class FloatingBarWindow : Window, IBarRuntimeHost
         ShowActivated = false;
         WindowHelper.SetNoActivate(this);
         _mediaControl.BindBatterySource(batterySource);
+        if (stockSource is not null) _mediaControl.BindStockSource(stockSource);
         InitializeEdgeCollapse();
         PresentationSettings = ProjectSettings();
         _centerPx = new Point(monitor.WorkArea.Left + monitor.WorkArea.Width / 2,

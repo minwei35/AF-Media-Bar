@@ -274,6 +274,9 @@ public static class SettingsManager
         if (!previousMetrics.Metrics!.SequenceEqual(targetMetrics.Metrics!) || !previousMetrics.GetMetricOrder().SequenceEqual(targetMetrics.GetMetricOrder()))
             next.TaskbarExperience = ComponentLayoutPolicy.PreserveImplicitLayouts(Current);
         next.PerformanceComponent = defaults.PerformanceComponent;
+        // 自选股属于用户数据，重置组件参数时保留，只把开关恢复默认。
+        // The watchlist is user data: resetting component parameters keeps it and restores only the switch.
+        next.StockTicker = defaults.StockTicker with { Codes = next.StockTicker.Codes, Enabled = next.StockTicker.Enabled };
         next.BluetoothBatteryWidget = defaults.BluetoothBatteryWidget with { Enabled = next.BluetoothBatteryWidget.Enabled };
         next.TaskbarExperience = next.TaskbarExperience with
         {

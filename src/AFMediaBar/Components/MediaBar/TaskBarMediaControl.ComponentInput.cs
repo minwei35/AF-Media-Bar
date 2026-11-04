@@ -46,6 +46,7 @@ public partial class TaskBarMediaControl
         {
             [TaskbarRestComponent.Spectrum] = TaskbarSpectrumHoverSurface,
             [TaskbarRestComponent.BluetoothBattery] = TaskbarBatterySurface,
+            [TaskbarRestComponent.StockTicker] = TaskbarStockSurface,
             [TaskbarRestComponent.OutputDevice] = TaskbarOutputDeviceHoverSurface,
             [TaskbarRestComponent.InputDevice] = TaskbarInputDeviceHoverSurface,
             [TaskbarRestComponent.Volume] = TaskbarVolumeHoverSurface,

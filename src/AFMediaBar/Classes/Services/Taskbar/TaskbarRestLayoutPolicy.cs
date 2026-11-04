@@ -78,6 +78,7 @@ public static class TaskbarRestLayoutPolicy
     [
         TaskbarRestComponent.Spectrum,
         TaskbarRestComponent.Performance,
+        TaskbarRestComponent.StockTicker,
         TaskbarRestComponent.OutputDevice,
         TaskbarRestComponent.InputDevice,
         TaskbarRestComponent.Volume,
@@ -190,7 +191,8 @@ public static class TaskbarRestLayoutPolicy
         bool VolumeEnabled,
         bool ArtworkEnabled = true,
         bool InputDeviceEnabled = false,
-        bool BatteryEnabled = false);
+        bool BatteryEnabled = false,
+        bool StockEnabled = false);
 
     /// <summary>
     /// 判定一个静置层组件这次是否可见。
@@ -213,6 +215,10 @@ public static class TaskbarRestLayoutPolicy
     /// <param name="visibility">当前输入。/ The current inputs.</param>
     public static bool IsVisible(TaskbarRestComponent component, in Visibility visibility)
     {
+        // 盯盘组件与媒体会话无关：没有媒体时它照样有意义，因此它只看自己的开关，不落到"无媒体保留列表"里。
+        // The stock ticker is independent of the media session: it stays meaningful with no media, so it follows its own switch instead of
+        // the "kept without media" list.
+        if (component == TaskbarRestComponent.StockTicker) return visibility.StockEnabled;
         if (component == TaskbarRestComponent.BluetoothBattery && !visibility.BatteryEnabled) return false;
         if (!visibility.MediaConnected)
         {
@@ -236,6 +242,7 @@ public static class TaskbarRestLayoutPolicy
             TaskbarRestComponent.OutputDevice => visibility.OutputDeviceEnabled,
             TaskbarRestComponent.InputDevice => visibility.InputDeviceEnabled,
             TaskbarRestComponent.Volume => visibility.VolumeEnabled,
+            TaskbarRestComponent.StockTicker => visibility.StockEnabled,
             _ => false
         };
     }

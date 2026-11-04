@@ -3864,4 +3864,26 @@
   <data name="Settings.Reorder.MediaBarHelp" xml:space="preserve"><value>拖动调整顺序；也可在实际媒体栏上用鼠标拖动组件。</value></data>
   <data name="ComponentLayout.Parallel" xml:space="preserve"><value>并排指标与顺序</value></data>
   <data name="ComponentLayout.ParallelDescription" xml:space="preserve"><value>与“常驻状态”的常驻显示共用显隐和顺序；无媒体显示请到该页单独调整。</value></data>
+  <data name="Stock.Title" xml:space="preserve"><value>盯盘组件</value></data>
+  <data name="Stock.Description" xml:space="preserve"><value>在任务栏媒体栏里显示自选股的最新价与涨跌幅，按设定的秒数轮流显示；不需要正在播放音乐。</value></data>
+  <data name="Stock.Enabled.Title" xml:space="preserve"><value>显示盯盘组件</value></data>
+  <data name="Stock.Enabled.Description" xml:space="preserve"><value>关闭后组件从媒体栏移除，行情轮询也随之停止。</value></data>
+  <data name="Stock.Watchlist.Title" xml:space="preserve"><value>自选股</value></data>
+  <data name="Stock.Watchlist.Description" xml:space="preserve"><value>用空格或逗号分隔多个代码；纯数字按首位推断市场（6 开头为沪市，0/1/2/3 开头为深市）。</value></data>
+  <data name="Stock.Watchlist.Hint" xml:space="preserve"><value>例如 sh000001 sh600519 sz300750</value></data>
+  <data name="Stock.Watchlist.Summary" xml:space="preserve"><value>共 {0} 只</value></data>
+  <data name="Stock.Refresh.Title" xml:space="preserve"><value>刷新间隔</value></data>
+  <data name="Stock.Refresh.Description" xml:space="preserve"><value>交易时段内按该间隔拉取行情；收盘后自动降频到 60 秒。</value></data>
+  <data name="Stock.Rotate.Title" xml:space="preserve"><value>轮换间隔</value></data>
+  <data name="Stock.Rotate.Description" xml:space="preserve"><value>组件只放得下一只股票，按该间隔轮流显示；点击组件可立即切到下一只。</value></data>
+  <data name="Stock.ShowName.Title" xml:space="preserve"><value>显示证券简称</value></data>
+  <data name="Stock.ShowName.Description" xml:space="preserve"><value>关闭后只显示价格与涨跌幅。</value></data>
+  <data name="Stock.ShowPercent.Title" xml:space="preserve"><value>显示涨跌幅</value></data>
+  <data name="Stock.ShowPercent.Description" xml:space="preserve"><value>关闭后只显示最新价。</value></data>
+  <data name="Stock.SwapColors.Title" xml:space="preserve"><value>绿涨红跌</value></data>
+  <data name="Stock.SwapColors.Description" xml:space="preserve"><value>默认按 A 股习惯红涨绿跌；打开后反色，适合同时盯美股。</value></data>
+  <data name="Stock.Placeholder" xml:space="preserve"><value>自选</value></data>
+  <data name="Stock.NoWatchlist" xml:space="preserve"><value>未配置自选股</value></data>
+  <data name="Stock.Loading" xml:space="preserve"><value>行情加载中</value></data>
+  <data name="Stock.Unavailable" xml:space="preserve"><value>行情不可用</value></data>
 </root>

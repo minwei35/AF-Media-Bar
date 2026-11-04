@@ -74,6 +74,7 @@ public sealed class AppSettings : INotifyPropertyChanged
     private BluetoothBatteryWidgetSettings _bluetoothBatteryWidget = new();
     private SystemMemoryOptimizationSettings _systemMemoryOptimization = new();
     private PerformanceComponentSettings _performanceComponent = PerformanceComponentSettings.Default;
+    private StockTickerSettings _stockTicker = StockTickerSettings.Default;
     private UpdateSettings _update = UpdateSettings.Default;
     private bool _launchAtStartup = true;
     private bool _developerModeEnabled;
@@ -211,6 +212,9 @@ public sealed class AppSettings : INotifyPropertyChanged
     public SystemMemoryOptimizationSettings SystemMemoryOptimization { get => _systemMemoryOptimization; set => Set(ref _systemMemoryOptimization, (value ?? new()).Normalize()); }
     public PerformanceComponentSettings PerformanceComponent { get => _performanceComponent; set => Set(ref _performanceComponent, value.Normalize()); }
 
+    /// <summary>盯盘组件设置：自选股、刷新与轮换节奏。/ Stock ticker settings: watchlist, refresh and rotation cadence.</summary>
+    public StockTickerSettings StockTicker { get => _stockTicker; set => Set(ref _stockTicker, (value ?? StockTickerSettings.Default).Normalize()); }
+
     /// <summary>更新下载器设置：自动检查、自动下载安装、已跳过版本与上次检查结果。/ Update-downloader settings: automatic checking, automatic download and install, skipped version, and the last check result.</summary>
     public UpdateSettings Update { get => _update; set => Set(ref _update, value.Normalize()); }
 
@@ -282,6 +286,7 @@ public sealed class AppSettings : INotifyPropertyChanged
         result.BluetoothBatteryWidget = result.BluetoothBatteryWidget.Normalize();
         result.SystemMemoryOptimization = result.SystemMemoryOptimization.Normalize();
         result.PerformanceComponent = result.PerformanceComponent.Normalize();
+        result.StockTicker = result.StockTicker.Normalize();
         result.Update = result.Update.Normalize();
         if (!Enum.IsDefined(result.InterfaceLanguage)) result.InterfaceLanguage = defaults.InterfaceLanguage;
         result.TaskbarTargetMonitorDeviceId = string.IsNullOrWhiteSpace(result.TaskbarTargetMonitorDeviceId)
@@ -364,6 +369,7 @@ public sealed class AppSettings : INotifyPropertyChanged
         BluetoothBatteryWidget = BluetoothBatteryWidget,
         SystemMemoryOptimization = SystemMemoryOptimization,
         PerformanceComponent = PerformanceComponent,
+        StockTicker = StockTicker,
         Update = Update,
         DeveloperModeEnabled = DeveloperModeEnabled,
         LaunchAtStartup = LaunchAtStartup,

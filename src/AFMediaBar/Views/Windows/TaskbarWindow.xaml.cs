@@ -167,7 +167,8 @@ public partial class TaskbarWindow : Window, IBarRuntimeHost
         bool startImmediately = true,
         Func<ExternalFullPanelHandleWindow>? externalFullPanelHandleFactory = null,
         QuickLaunchService? quickLaunch = null,
-        QuickLaunchIconService? quickLaunchIcons = null)
+        QuickLaunchIconService? quickLaunchIcons = null,
+        AFMediaBar.Classes.Services.StockQuoteService? stockSource = null)
     {
         _quickLaunch = quickLaunch;
         WindowHelper.SetNoActivate(this);
@@ -181,6 +182,7 @@ public partial class TaskbarWindow : Window, IBarRuntimeHost
         InitializeExternalFullPanelHandle(externalFullPanelHandleFactory);
         DataContext = ViewModel;
         MediaControl.BindBatterySource(batterySource);
+        if (stockSource is not null) MediaControl.BindStockSource(stockSource);
         ContextMenuHelper.AttachOutsideClickDismissal(PlayerMenu);
         appearanceService.Attach(PlayerMenu, this);
         PlayerMenu.OpenSettingsRequested += PlayerMenu_OpenSettingsRequested;

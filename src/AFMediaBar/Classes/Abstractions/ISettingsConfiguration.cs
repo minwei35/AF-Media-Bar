@@ -47,6 +47,8 @@ public interface ISettingsConfiguration
     void SetSpectrum(SpectrumComponentSettings settings);
     /// <summary>Replaces performance configuration through its domain normalization.</summary>
     void SetPerformance(PerformanceComponentSettings settings);
+    /// <summary>Replaces stock-ticker configuration through its domain normalization.</summary>
+    void SetStockTicker(StockTickerSettings settings);
     /// <summary>Notifies a cached editor to refresh after reactivation.</summary>
     event EventHandler? Activated;
     /// <summary>Resets one existing settings scope without changing the persisted schema.</summary>
