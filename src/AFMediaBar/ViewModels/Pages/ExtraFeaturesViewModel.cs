@@ -6,6 +6,7 @@ using AFMediaBar.Classes.Services.Localization;
 using AFMediaBar.Classes.Settings;
 using AFMediaBar.Classes.Utils;
 using AFMediaBar.Resources;
+using AFMediaBar.Classes.Abstractions;
 
 namespace AFMediaBar.ViewModels.Pages;
 
@@ -13,10 +14,12 @@ namespace AFMediaBar.ViewModels.Pages;
 public partial class ExtraFeaturesViewModel : ObservableObject
 {
     private readonly MediaSourceRegistry _sources;
-    private readonly MediaSessionService _mediaSessions;
+    private readonly IMediaSourceCatalog _mediaSessions;
     private readonly IDisplayMonitorService _displayMonitorService;
     private readonly LocalizationService _localization;
     private readonly QuickLaunchService _quickLaunch;
+    private readonly TrackChangeNotificationCoordinator _notifications;
+    private bool _notificationPreviewUnavailable;
 
     // 设置写入会同步通知订阅者，而写设置的那一方可能在后台线程上（更新检查的网络等待之后就是如此）：
     // 本页的 Sources 绑定到界面，跨线程改它们会让 WPF 的 CollectionView 抛异常，
@@ -29,6 +32,8 @@ public partial class ExtraFeaturesViewModel : ObservableObject
 
     private bool _isRefreshing;
     private string? _statusKey;
+    private string? _notificationTitleColorText;
+    private string? _notificationArtistColorText;
     // 状态行是瞬态反馈：写上去若干秒后自动清空，否则「已添加到快速启动」会一直挂在那里。
     // The status line is transient feedback: it clears itself a few seconds after being written, otherwise
     // "added to quick launch" would just stay there.
@@ -88,10 +93,11 @@ public partial class ExtraFeaturesViewModel : ObservableObject
 
     public ExtraFeaturesViewModel(
         MediaSourceRegistry sources,
-        MediaSessionService mediaSessions,
+        IMediaSourceCatalog mediaSessions,
         IDisplayMonitorService displayMonitorService,
-        LocalizationService localization, QuickLaunchService quickLaunch)
+        LocalizationService localization, QuickLaunchService quickLaunch, TrackChangeNotificationCoordinator notifications)
     {
+        _notifications = notifications;
         _quickLaunch = quickLaunch;
         _sources = sources;
         _mediaSessions = mediaSessions;
@@ -161,6 +167,60 @@ public partial class ExtraFeaturesViewModel : ObservableObject
     public NotificationTargetMode TrackChangeNotificationTargetMode { get => Notification.TargetMode; set => UpdateNotification(Notification with { TargetMode = value }); }
     public string? TrackChangeNotificationFixedMonitorDeviceId { get => Notification.FixedMonitorDeviceId ?? _displayMonitorService.ResolveFixedMonitor(null)?.DeviceId; set => UpdateNotification(Notification with { FixedMonitorDeviceId = value }); }
     public bool CanSelectTrackChangeNotificationMonitor => TrackChangeNotificationEnabled && TrackChangeNotificationTargetMode == NotificationTargetMode.Fixed;
+    public double NotificationHorizontalOffsetDip { get => Notification.HorizontalOffsetDip; set => UpdateNotification(Notification with { HorizontalOffsetDip = value }); }
+    public double NotificationVerticalOffsetDip { get => Notification.VerticalOffsetDip; set => UpdateNotification(Notification with { VerticalOffsetDip = value }); }
+    public int NotificationTitleFontSize { get => Notification.TitleFontSize; set => UpdateNotification(Notification with { TitleFontSize = value }); }
+    public int NotificationArtistFontSize { get => Notification.ArtistFontSize; set => UpdateNotification(Notification with { ArtistFontSize = value }); }
+    public string NotificationTitleColor
+    {
+        get => _notificationTitleColorText ?? Notification.TitleColor ?? string.Empty;
+        set
+        {
+            if (!SetProperty(ref _notificationTitleColorText, value)) return;
+            if (string.IsNullOrWhiteSpace(value)) UpdateNotification(Notification with { TitleColor = null });
+            else if (ColorHex.TryParse(value, out var color)) UpdateNotification(Notification with { TitleColor = ColorHex.Format(color) });
+        }
+    }
+    public string NotificationArtistColor
+    {
+        get => _notificationArtistColorText ?? Notification.ArtistColor ?? string.Empty;
+        set
+        {
+            if (!SetProperty(ref _notificationArtistColorText, value)) return;
+            if (string.IsNullOrWhiteSpace(value)) UpdateNotification(Notification with { ArtistColor = null });
+            else if (ColorHex.TryParse(value, out var color)) UpdateNotification(Notification with { ArtistColor = ColorHex.Format(color) });
+        }
+    }
+    public TrackChangeNotificationSettings NotificationPreviewSettings => Notification.Normalize();
+    public string NotificationPreviewMessage => _notificationPreviewUnavailable ? Translations.Get("Notification.Preview.Unavailable") : string.Empty;
+    [RelayCommand]
+    private void SendNotificationPreview()
+    {
+        _notificationPreviewUnavailable = !_notifications.RequestPreview(NotificationPreviewSnapshot, NotificationPreviewSettings);
+        OnPropertyChanged(nameof(NotificationPreviewMessage));
+    }
+    [RelayCommand]
+    private void SetNotificationPlacement(NotificationPlacement placement) => UpdateNotification(Notification with
+    {
+        Position = placement.Position, HorizontalOffsetDip = placement.HorizontalOffset, VerticalOffsetDip = placement.VerticalOffset
+    });
+    [RelayCommand]
+    private void SetNotificationTitleColor(string? color) => NotificationTitleColor = color ?? string.Empty;
+    [RelayCommand]
+    private void SetNotificationArtistColor(string? color) => NotificationArtistColor = color ?? string.Empty;
+    public MediaSnapshot NotificationPreviewSnapshot => MediaSnapshot.Disconnected with
+    {
+        IsConnected = true, IsPlaying = true, SourceName = "AF Media Bar",
+        Title = Translations.Get("Settings.Preview.Track"), Artist = Translations.Get("Settings.Preview.Artist")
+    };
+    public System.Windows.Size NotificationPreviewSize
+    {
+        get
+        {
+            var monitor = _displayMonitorService.ResolveNotificationMonitor(Notification.TargetMode, Notification.FixedMonitorDeviceId);
+            return monitor is null ? new(1920, 1040) : new(monitor.WorkArea.Width * 96 / (monitor.DpiX == 0 ? 96 : monitor.DpiX), monitor.WorkArea.Height * 96 / (monitor.DpiY == 0 ? 96 : monitor.DpiY));
+        }
+    }
 
     private TrackChangeNotificationSettings Notification => SettingsManager.Current.TrackChangeNotification;
 
@@ -226,11 +286,23 @@ public partial class ExtraFeaturesViewModel : ObservableObject
         OnPropertyChanged(nameof(TrackChangeNotificationTargetMode));
         OnPropertyChanged(nameof(TrackChangeNotificationFixedMonitorDeviceId));
         OnPropertyChanged(nameof(CanSelectTrackChangeNotificationMonitor));
+        foreach (var property in new[] { nameof(NotificationHorizontalOffsetDip), nameof(NotificationVerticalOffsetDip), nameof(NotificationTitleFontSize),
+            nameof(NotificationArtistFontSize), nameof(NotificationTitleColor), nameof(NotificationArtistColor), nameof(NotificationPreviewSettings),
+            nameof(NotificationPreviewSnapshot), nameof(NotificationPreviewSize) }) OnPropertyChanged(property);
     }
 
     private void OnDiscoveredSourcesChanged(IReadOnlyList<MediaSourceDescriptor> sources) => DispatcherHelper.Run(_dispatcher, RefreshSources);
-    private void OnSettingsChanged(object? sender, SettingsChangedEventArgs e) => DispatcherHelper.Run(_dispatcher, RefreshAll);
-    private void OnMonitorsChanged(object? sender, EventArgs e) => DispatcherHelper.Run(_dispatcher, RefreshMonitors);
+    private void OnSettingsChanged(object? sender, SettingsChangedEventArgs e) => DispatcherHelper.Run(_dispatcher, () =>
+    {
+        _notificationTitleColorText = null;
+        _notificationArtistColorText = null;
+        RefreshAll();
+    });
+    private void OnMonitorsChanged(object? sender, EventArgs e) => DispatcherHelper.Run(_dispatcher, () =>
+    {
+        RefreshMonitors();
+        OnPropertyChanged(nameof(NotificationPreviewSize));
+    });
 
     private void RefreshAll()
     {

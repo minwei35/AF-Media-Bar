@@ -1414,6 +1414,12 @@
   <data name="Lyrics.Searching" xml:space="preserve">
     <value>正在检索歌词</value>
   </data>
+  <data name="Panel.MediaBar.ProgressUnavailable.Adapted" xml:space="preserve">
+    <value>此版本播放器不提供播放进度</value>
+  </data>
+  <data name="Panel.MediaBar.ProgressUnavailable.Other" xml:space="preserve">
+    <value>此播放器不提供播放进度</value>
+  </data>
   <data name="Lyrics.Row.ChineseConversion.Title" xml:space="preserve">
     <value>歌词繁简转换</value>
   </data>
@@ -3706,10 +3712,10 @@
     <value>开发中</value>
   </data>
   <data name="Home.Feature.Settings" xml:space="preserve">
-    <value>原生设置中心</value>
+    <value>全新设置页面</value>
   </data>
   <data name="Home.Feature.Settings.Body" xml:space="preserve">
-    <value>按对象组织设置，合并组件显隐与排序；支持搜索定位和局部预览。此功能尚未正式发布。</value>
+    <value>六大分区与分类概览，配合搜索、关联跳转和实际样式预览，更方便地调整常驻内容、快捷控制与小组件。</value>
   </data>
   <data name="Home.Feature.Panel" xml:space="preserve">
     <value>紧凑完整面板</value>
@@ -3896,4 +3902,40 @@
   <data name="Stock.Schedule.Description" xml:space="preserve"><value>只在开盘时段显示，其余时间把任务栏位置还回去</value></data>
   <data name="Stock.Schedule.Enabled.Title" xml:space="preserve"><value>只在 9:00–16:00 显示</value></data>
   <data name="Stock.Schedule.Enabled.Description" xml:space="preserve"><value>周一至周五 09:00–16:00 显示，其余时间（含周末）隐藏；按本机时钟判断，跨过时间点后 30 秒内自动切换</value></data>
+  <data name="Home.Feature.Release" xml:space="preserve"><value>AF Media Bar 1.7.0 — 全新设置首页、组件布局与本地歌词</value></data>
+  <data name="Home.Feature.Release.Body" xml:space="preserve"><value>重新整理设置与导航，让三状态组件布局、性能图表和完整面板更易配置，并支持读取本地歌词。</value></data>
+  <data name="Start.Highlight.Settings" xml:space="preserve"><value>全新设置页面</value></data>
+  <data name="Start.Faq" xml:space="preserve"><value>常见问题</value></data>
+  <data name="Start.Faq.Customization" xml:space="preserve"><value>使用第三方美化工具时需要注意什么？</value></data>
+  <data name="Start.Faq.Customization.Body" xml:space="preserve"><value>除已兼容的 TranslucentTB 外，其他第三方美化工具，尤其是修改或替换原生任务栏的工具，目前尚未经过充分测试，可能出现不适配或无法使用的情况。安装或使用这些工具时，建议选择桌面悬浮模式；如遇问题，欢迎反馈工具名称、版本及复现步骤。</value></data>
+  <data name="Home.Customization.OpenFloating" xml:space="preserve"><value>前往设置悬浮模式</value></data>
+  <data name="Home.Customization.Title" xml:space="preserve"><value>美化工具检测</value></data>
+  <data name="Home.Customization.Detected" xml:space="preserve"><value>检测到安装或运行记录：{0}</value></data>
+  <data name="Home.Customization.Incomplete" xml:space="preserve"><value>部分信息无法读取，检测结果可能不完整。</value></data>
+  <data name="Home.Customization.Coverage" xml:space="preserve"><value>仅依据安装与运行记录提示，不能确认工具是否已启用任务栏修改。</value></data>
+  <data name="Home.Customization.Warning" xml:space="preserve"><value>这些工具的任务栏修改尚未经过充分测试，可能出现不适配或无法使用的情况。建议使用桌面悬浮模式；如遇问题，欢迎反馈。</value></data>
+  <data name="Widgets.Note.Tooltips" xml:space="preserve"><value>显示小音符操作提示</value></data>
+  <data name="Media.QuickLaunch.Added" xml:space="preserve"><value>已添加</value></data>
+  <data name="Controls.TextBlur.Title" xml:space="preserve"><value>悬停时的文字模糊程度</value></data>
+  <data name="Controls.TextBlur.Description" xml:space="preserve"><value>调整快捷控制打开后，被遮盖标题和歌词的模糊程度。0 表示不模糊。</value></data>
+  <data name="Notification.Preview.Position" xml:space="preserve"><value>屏幕位置预览</value></data>
+  <data name="Notification.Preview.Appearance" xml:space="preserve"><value>通知外观预览（实际字号）</value></data>
+  <data name="Notification.Offset.Horizontal" xml:space="preserve"><value>水平偏移</value></data>
+  <data name="Notification.Offset.Vertical" xml:space="preserve"><value>垂直偏移</value></data>
+  <data name="Notification.Title.Size" xml:space="preserve"><value>标题字号</value></data>
+  <data name="Notification.Artist.Size" xml:space="preserve"><value>歌手字号</value></data>
+  <data name="Notification.Title.Color" xml:space="preserve"><value>标题颜色</value></data>
+  <data name="Notification.Artist.Color" xml:space="preserve"><value>歌手颜色</value></data>
+  <data name="Notification.Color.Hint" xml:space="preserve"><value>输入 #RRGGBB，留空时跟随主题。</value></data>
+  <data name="Notification.Offset.Horizontal.Hint" xml:space="preserve"><value>以预设位置为起点，正值向右、负值向左；限制在工作区内。</value></data>
+  <data name="Notification.Offset.Vertical.Hint" xml:space="preserve"><value>以预设位置为起点，正值向下、负值向上；限制在工作区内。</value></data>
+  <data name="Notification.Preview.DragHint" xml:space="preserve"><value>拖动通知调整位置，靠近定位点时自动吸附；也可点击定位点。按 Esc 取消拖动。</value></data>
+  <data name="Notification.PositionDetails.Title" xml:space="preserve"><value>位置细节</value></data>
+  <data name="Notification.PositionDetails.Hint" xml:space="preserve"><value>通过水平、垂直偏移精细调整位置。</value></data>
+  <data name="Notification.Color.Theme" xml:space="preserve"><value>跟随主题</value></data>
+  <data name="Notification.Preview.Send" xml:space="preserve"><value>发送一次通知</value></data>
+  <data name="Notification.Preview.Send.Hint" xml:space="preserve"><value>使用当前预览内容与配置发送真实通知，不改变自动通知开关。</value></data>
+  <data name="Notification.Preview.Unavailable" xml:space="preserve"><value>当前没有可用的通知目标，无法发送通知。</value></data>
+  <data name="Start.Faq.Smtc" xml:space="preserve"><value>无法控制播放或不显示封面？</value></data>
+  <data name="Start.Faq.Smtc.Body" xml:space="preserve"><value>请尝试在播放器设置中开启“SMTC”“支持系统媒体控制”或“支持系统播放控件”等选项，再重新播放歌曲。不同播放器的选项名称可能不同。</value></data>
 </root>

@@ -145,12 +145,14 @@ namespace AFMediaBar
                 services.AddSingleton<MediaSourceRegistry>();
                 services.AddSingleton<MediaSessionCatalog>();
                 services.AddSingleton<MediaSessionSelectionService>();
-                services.AddSingleton<MediaSnapshotBuilder>();
+                services.AddSingleton(sp => new MediaSnapshotBuilder(sp.GetRequiredService<LyricsService>(),
+                    TimeProvider.System, sp.GetRequiredService<AppLogService>(), sp.GetRequiredService<MediaSourceRegistry>()));
 
                 // 来源提供器可以有多个：各自按 CanHandle 认领 SMTC 来源，令牌互不重叠。
                 // There can be several source providers: each claims its SMTC sources by CanHandle, and the tokens never overlap.
                 services.AddSingleton<NetEaseMediaProvider>();
-                services.AddSingleton<KuGouMediaProvider>();
+                services.AddSingleton(sp => new KuGouMediaProvider(sp.GetRequiredService<LyricsService>(),
+                    Current.Dispatcher, sp.GetRequiredService<AppLogService>()));
                 services.AddSingleton<IMediaSourceProvider>(sp => sp.GetRequiredService<NetEaseMediaProvider>());
                 services.AddSingleton<IMediaSourceProvider>(sp => sp.GetRequiredService<KuGouMediaProvider>());
 
@@ -165,6 +167,7 @@ namespace AFMediaBar
                 services.AddSingleton<QuickLaunchService>();
                 services.AddSingleton<QuickLaunchIconService>();
                 services.AddSingleton<MediaSessionService>();
+                services.AddSingleton<AFMediaBar.Classes.Abstractions.IMediaSourceCatalog>(provider => provider.GetRequiredService<MediaSessionService>());
                 services.AddSingleton<TrackChangeNotificationCoordinator>();
                 services.AddSingleton<MediaSourceProcessResolver>();
                 services.AddSingleton<SpectrumCaptureProcessResolver>();
@@ -264,6 +267,7 @@ namespace AFMediaBar
                 services.AddSingleton<DeveloperToolsWindowHost>();
                 services.AddSingleton<ReleaseHighlightsService>();
                 services.AddSingleton<AFMediaBar.Classes.Services.Home.HomeContentService>();
+                services.AddSingleton<AFMediaBar.Classes.Services.Home.TaskbarCustomizationService>();
                 services.AddSingleton<AFMediaBar.Classes.Abstractions.IHomeMediaState, AFMediaBar.Classes.Services.Home.HomeMediaState>();
                 services.AddSingleton<ReleaseHighlightsViewModel>();
                 services.AddScoped<ReleaseHighlightsPage>();

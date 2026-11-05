@@ -1414,6 +1414,12 @@
   <data name="Lyrics.Searching" xml:space="preserve">
     <value>Searching for lyrics</value>
   </data>
+  <data name="Panel.MediaBar.ProgressUnavailable.Adapted" xml:space="preserve">
+    <value>This player version does not report playback progress</value>
+  </data>
+  <data name="Panel.MediaBar.ProgressUnavailable.Other" xml:space="preserve">
+    <value>This player does not report playback progress</value>
+  </data>
   <data name="Lyrics.Row.ChineseConversion.Title" xml:space="preserve">
     <value>Chinese conversion</value>
   </data>
@@ -3706,10 +3712,10 @@ The full-panel entry opens on click or hover. Bluetooth battery remains an exper
     <value>In development</value>
   </data>
   <data name="Home.Feature.Settings" xml:space="preserve">
-    <value>Native settings centre</value>
+    <value>All-new Settings pages</value>
   </data>
   <data name="Home.Feature.Settings.Body" xml:space="preserve">
-    <value>Organise settings by task, edit component visibility and order together, and preview changes. Not yet released.</value>
+    <value>Six areas, category overviews, search, related navigation and actual style previews make resident content, quick controls and widgets easier to configure.</value>
   </data>
   <data name="Home.Feature.Panel" xml:space="preserve">
     <value>Compact full panel</value>
@@ -3896,4 +3902,40 @@ The full-panel entry opens on click or hover. Bluetooth battery remains an exper
   <data name="Stock.Schedule.Description" xml:space="preserve"><value>Show the ticker only during market hours and hand the taskbar space back afterwards</value></data>
   <data name="Stock.Schedule.Enabled.Title" xml:space="preserve"><value>Show only between 09:00 and 16:00</value></data>
   <data name="Stock.Schedule.Enabled.Description" xml:space="preserve"><value>Shown Monday to Friday from 09:00 to 16:00 and hidden otherwise, weekends included; judged by the local clock and switched within 30 seconds of the boundary</value></data>
+  <data name="Home.Feature.Release" xml:space="preserve"><value>AF Media Bar 1.7.0 — A new Settings home, component layouts and local lyrics</value></data>
+  <data name="Home.Feature.Release.Body" xml:space="preserve"><value>Reorganized Settings and navigation make three-state component layouts, performance charts and the full panel easier to configure, with support for local lyric files.</value></data>
+  <data name="Start.Highlight.Settings" xml:space="preserve"><value>All-new Settings pages</value></data>
+  <data name="Start.Faq" xml:space="preserve"><value>Frequently asked questions</value></data>
+  <data name="Start.Faq.Customization" xml:space="preserve"><value>What should I know about third-party customization tools?</value></data>
+  <data name="Start.Faq.Customization.Body" xml:space="preserve"><value>Apart from the compatible TranslucentTB, other customization tools, especially those that modify or replace the native taskbar, have not been thoroughly tested. Layout conflicts or unavailable features may occur. We recommend desktop floating mode when using these tools. If you encounter problems, please report the tool name, version and steps to reproduce.</value></data>
+  <data name="Home.Customization.OpenFloating" xml:space="preserve"><value>Open floating-mode settings</value></data>
+  <data name="Home.Customization.Title" xml:space="preserve"><value>Customization tool detection</value></data>
+  <data name="Home.Customization.Detected" xml:space="preserve"><value>Installation or running records found: {0}</value></data>
+  <data name="Home.Customization.Incomplete" xml:space="preserve"><value>Some information could not be read; detection may be incomplete.</value></data>
+  <data name="Home.Customization.Coverage" xml:space="preserve"><value>Based on installation and running records; this does not confirm whether taskbar changes are enabled.</value></data>
+  <data name="Home.Customization.Warning" xml:space="preserve"><value>Taskbar changes made by these tools have not been thoroughly tested and may cause layout conflicts or unavailable features. We recommend desktop floating mode. Please report any problems.</value></data>
+  <data name="Widgets.Note.Tooltips" xml:space="preserve"><value>Show quick-launch tooltips</value></data>
+  <data name="Media.QuickLaunch.Added" xml:space="preserve"><value>Added</value></data>
+  <data name="Controls.TextBlur.Title" xml:space="preserve"><value>Text blur behind hover controls</value></data>
+  <data name="Controls.TextBlur.Description" xml:space="preserve"><value>Adjust blur on the title and lyrics behind expanded quick controls. Use 0 for no blur.</value></data>
+  <data name="Notification.Preview.Position" xml:space="preserve"><value>Screen position preview</value></data>
+  <data name="Notification.Preview.Appearance" xml:space="preserve"><value>Notification appearance (actual text size)</value></data>
+  <data name="Notification.Offset.Horizontal" xml:space="preserve"><value>Horizontal offset</value></data>
+  <data name="Notification.Offset.Vertical" xml:space="preserve"><value>Vertical offset</value></data>
+  <data name="Notification.Title.Size" xml:space="preserve"><value>Title font size</value></data>
+  <data name="Notification.Artist.Size" xml:space="preserve"><value>Artist font size</value></data>
+  <data name="Notification.Title.Color" xml:space="preserve"><value>Title color</value></data>
+  <data name="Notification.Artist.Color" xml:space="preserve"><value>Artist color</value></data>
+  <data name="Notification.Color.Hint" xml:space="preserve"><value>Enter #RRGGBB, or leave blank to follow the theme.</value></data>
+  <data name="Notification.Offset.Horizontal.Hint" xml:space="preserve"><value>Offset from the preset: positive moves right, negative moves left. Clamped to the work area.</value></data>
+  <data name="Notification.Offset.Vertical.Hint" xml:space="preserve"><value>Offset from the preset: positive moves down, negative moves up. Clamped to the work area.</value></data>
+  <data name="Notification.Preview.DragHint" xml:space="preserve"><value>Drag the notification to move it; nearby anchors snap into place. You can also click an anchor. Press Esc to cancel dragging.</value></data>
+  <data name="Notification.PositionDetails.Title" xml:space="preserve"><value>Position details</value></data>
+  <data name="Notification.PositionDetails.Hint" xml:space="preserve"><value>Fine-tune the position with horizontal and vertical offsets.</value></data>
+  <data name="Notification.Color.Theme" xml:space="preserve"><value>Follow theme</value></data>
+  <data name="Notification.Preview.Send" xml:space="preserve"><value>Send a notification</value></data>
+  <data name="Notification.Preview.Send.Hint" xml:space="preserve"><value>Show a real notification using the preview content and current settings, without changing automatic notifications.</value></data>
+  <data name="Notification.Preview.Unavailable" xml:space="preserve"><value>No notification target is currently available.</value></data>
+  <data name="Start.Faq.Smtc" xml:space="preserve"><value>Playback controls do not work, or artwork is missing?</value></data>
+  <data name="Start.Faq.Smtc.Body" xml:space="preserve"><value>Try enabling SMTC, system media control support, or system playback controls in the player settings, then start playback again. The option name varies by player.</value></data>
 </root>

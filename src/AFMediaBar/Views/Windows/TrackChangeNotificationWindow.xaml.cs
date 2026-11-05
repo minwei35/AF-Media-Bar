@@ -24,8 +24,10 @@ public partial class TrackChangeNotificationWindow : FluentWindow
     private readonly DispatcherTimer _hideTimer;
     private DisplayMonitorInfo? _currentMonitor;
     private TrackChangeNotificationPosition _currentPosition;
+    private TrackChangeNotificationSettings _currentSettings;
     private bool _hasCompletedInitialLayout;
     private int _presentationVersion;
+    private bool _isExiting;
 
     /// <summary>创建通知窗口并接入统一窗口外观。 / Creates the notification window and attaches unified window appearance.</summary>
     public TrackChangeNotificationWindow(WindowAppearanceService appearanceService)
@@ -55,10 +57,13 @@ public partial class TrackChangeNotificationWindow : FluentWindow
 
         var presentationVersion = ++_presentationVersion;
         _hideTimer.Stop();
-        StopAnimations();
+        StopAnimations(preservePresentation: IsVisible);
+        _isExiting = false;
         ApplyMotionEffects();
         _currentMonitor = request.Monitor;
-        _currentPosition = request.Settings.Position;
+        _currentSettings = request.Settings.Normalize();
+        _currentPosition = _currentSettings.Position;
+        NotificationContent.Settings = _currentSettings;
         ApplySnapshot(request.Snapshot);
 
         if (!IsVisible)
@@ -89,7 +94,6 @@ public partial class TrackChangeNotificationWindow : FluentWindow
         EnsureContentSizedWindow();
         PositionOnMonitor(request.Monitor, request.Settings.Position);
         _hasCompletedInitialLayout = true;
-        Opacity = 1;
         BeginEntryAnimation(request.Settings.Position);
 
         _hideTimer.Interval = TimeSpan.FromMilliseconds(request.Settings.DurationMilliseconds);
@@ -152,22 +156,7 @@ public partial class TrackChangeNotificationWindow : FluentWindow
         PositionOnMonitor(_currentMonitor, _currentPosition);
     }
 
-    private void ApplySnapshot(MediaSnapshot snapshot)
-    {
-        TitleText.Text = snapshot.Title;
-        ArtistText.Text = string.IsNullOrWhiteSpace(snapshot.Artist)
-            ? snapshot.SourceName
-            : snapshot.Artist;
-        ArtworkImage.Source = snapshot.Artwork;
-        ArtworkPlaceholder.Visibility = snapshot.Artwork is null ? Visibility.Visible : Visibility.Collapsed;
-        // 与任务栏封面共用宽高比约束；极端宽高比使用留白，避免通知将视频封面裁成正方形。
-        // Match the taskbar artwork box; extreme aspects letterbox instead of cropping the notification image.
-        var bitmap = snapshot.Artwork as BitmapSource;
-        var box = ArtworkBoxPolicy.Resolve(ArtworkBorder.Height, bitmap?.PixelWidth ?? 0, bitmap?.PixelHeight ?? 0);
-        ArtworkBorder.Width = box.Width;
-        ArtworkColumn.Width = new GridLength(box.Width);
-        ArtworkImage.Stretch = Stretch.Uniform;
-    }
+    private void ApplySnapshot(MediaSnapshot snapshot) => NotificationContent.Snapshot = snapshot;
 
     /// <summary>立即隐藏通知并取消动画和计时。 / Immediately hides the notification and cancels animations and timing.</summary>
     public void HideImmediately()
@@ -179,6 +168,7 @@ public partial class TrackChangeNotificationWindow : FluentWindow
         }
 
         _presentationVersion++;
+        _isExiting = false;
         _hideTimer.Stop();
         StopAnimations();
         if (IsVisible)
@@ -197,7 +187,9 @@ public partial class TrackChangeNotificationWindow : FluentWindow
             monitor.WorkArea,
             pixelSize,
             position,
-            16 * Math.Max(scaleX, scaleY));
+            16 * Math.Max(scaleX, scaleY),
+            _currentSettings.HorizontalOffsetDip * scaleX,
+            _currentSettings.VerticalOffsetDip * scaleY);
         var handle = new WindowInteropHelper(this).Handle;
         if (handle == IntPtr.Zero)
             return;
@@ -217,74 +209,82 @@ public partial class TrackChangeNotificationWindow : FluentWindow
         var motion = MotionPolicy.ResolveCurrent();
         var startsAtTop = position is TrackChangeNotificationPosition.TopLeft or
             TrackChangeNotificationPosition.TopCenter or TrackChangeNotificationPosition.TopRight;
-        EntryScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-        EntryScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-        EntryTransform.Y = startsAtTop ? -12 : 12;
-        EntryScaleTransform.ScaleX = motion.UseTransitions ? 0.98 : 1;
-        EntryScaleTransform.ScaleY = motion.UseTransitions ? 0.98 : 1;
-        AnimatedRoot.Opacity = motion.UseTransitions ? 0 : 1;
         if (!motion.UseTransitions)
         {
+            Opacity = 1;
             EntryTransform.Y = 0;
+            EntryScaleTransform.ScaleX = EntryScaleTransform.ScaleY = 1;
             return;
         }
 
         var duration = motion.StandardDuration;
-        EntryTransform.BeginAnimation(
-            TranslateTransform.YProperty,
-            new DoubleAnimation(0, new Duration(duration))
+        if (motion.Mode == MotionMode.Full)
+        {
+            if (Opacity <= 0)
             {
-                EasingFunction = new PowerEase { Power = 3, EasingMode = EasingMode.EaseOut }
-            });
-        EntryScaleTransform.BeginAnimation(
-            ScaleTransform.ScaleXProperty,
-            new DoubleAnimation(1, new Duration(duration))
-            {
-                EasingFunction = new PowerEase { Power = 3, EasingMode = EasingMode.EaseOut }
-            });
-        EntryScaleTransform.BeginAnimation(
-            ScaleTransform.ScaleYProperty,
-            new DoubleAnimation(1, new Duration(duration))
-            {
-                EasingFunction = new PowerEase { Power = 3, EasingMode = EasingMode.EaseOut }
-            });
-        AnimatedRoot.BeginAnimation(
-            OpacityProperty,
-            new DoubleAnimation(1, new Duration(duration)));
+                EntryTransform.Y = startsAtTop ? -12 : 12;
+                EntryScaleTransform.ScaleX = EntryScaleTransform.ScaleY = 0.98;
+            }
+            EntryTransform.BeginAnimation(TranslateTransform.YProperty, CreateTransition(EntryTransform.Y, 0, duration));
+            EntryScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, CreateTransition(EntryScaleTransform.ScaleX, 1, duration));
+            EntryScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, CreateTransition(EntryScaleTransform.ScaleY, 1, duration));
+        }
+        else
+        {
+            EntryTransform.Y = 0;
+            EntryScaleTransform.ScaleX = EntryScaleTransform.ScaleY = 1;
+        }
+        // 整个 HWND 一起淡入，避免背景材质先于文字突然出现；中断时从当前透明度继续。
+        BeginAnimation(OpacityProperty, CreateTransition(Opacity, 1, duration));
     }
 
-    private void HideTimer_Tick(object? sender, EventArgs e)
+    private static DoubleAnimation CreateTransition(double from, double to, TimeSpan duration) => new(from, to, new Duration(duration))
     {
+        EasingFunction = new PowerEase { Power = 3, EasingMode = EasingMode.EaseOut }
+    };
+
+    private void HideTimer_Tick(object? sender, EventArgs e) => BeginExitAnimation();
+
+    private void BeginExitAnimation()
+    {
+        if (!IsVisible || _isExiting) return;
+        _isExiting = true;
         _hideTimer.Stop();
-        var version = _presentationVersion;
+        var version = ++_presentationVersion;
         var motion = MotionPolicy.ResolveCurrent();
         if (!motion.UseTransitions)
         {
-            Hide();
+            HideImmediately();
             return;
         }
 
-        var animation = new DoubleAnimation(0, new Duration(motion.ExitDuration));
+        var animation = CreateTransition(Opacity, 0, motion.ExitDuration);
         animation.Completed += (_, _) =>
         {
             if (version == _presentationVersion && IsVisible)
-                Hide();
+                HideImmediately();
         };
-        AnimatedRoot.BeginAnimation(OpacityProperty, animation);
+        BeginAnimation(OpacityProperty, animation);
     }
 
-    private void Window_MouseEnter(object sender, MouseEventArgs e) => HideImmediately();
+    private void Window_MouseEnter(object sender, MouseEventArgs e) => BeginExitAnimation();
 
-    private void StopAnimations()
+    private void StopAnimations(bool preservePresentation = false)
     {
+        var opacity = Opacity;
+        var scaleX = EntryScaleTransform.ScaleX;
+        var scaleY = EntryScaleTransform.ScaleY;
+        var offset = EntryTransform.Y;
+        BeginAnimation(OpacityProperty, null);
         AnimatedRoot.BeginAnimation(OpacityProperty, null);
         EntryScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
         EntryScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
         EntryTransform.BeginAnimation(TranslateTransform.YProperty, null);
         AnimatedRoot.Opacity = 1;
-        EntryScaleTransform.ScaleX = 1;
-        EntryScaleTransform.ScaleY = 1;
-        EntryTransform.Y = 0;
+        Opacity = preservePresentation ? opacity : 0;
+        EntryScaleTransform.ScaleX = preservePresentation ? scaleX : 1;
+        EntryScaleTransform.ScaleY = preservePresentation ? scaleY : 1;
+        EntryTransform.Y = preservePresentation ? offset : 0;
     }
 
     private void ApplyMotionEffects()

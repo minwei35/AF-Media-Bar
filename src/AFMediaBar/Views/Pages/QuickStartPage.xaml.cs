@@ -106,8 +106,8 @@ public partial class QuickStartPage : INavigableView<QuickStartViewModel>
             Grid.SetColumn(HeroCopy, 0); Grid.SetColumnSpan(HeroCopy, 1); Grid.SetRow(HeroCopy, 0);
             Grid.SetColumn(HeroVisual, 2); Grid.SetColumnSpan(HeroVisual, 1); Grid.SetRow(HeroVisual, 0);
             HeroVisual.Margin = new Thickness(0);
-            // 默认（1320 窗，内容宽约 1024）350，宽窗（1560 窗，内容宽约 1264）380，让图片显示更大。
-            HeroVisual.Height = width >= 1100d ? 380d : 350d;
+            // 默认（1320 窗，内容宽约 1024）400，宽窗（1560 窗，内容宽约 1264）430，比原版略大以便看清宣传图。
+            HeroVisual.Height = width >= 1100d ? 430d : 400d;
             HeroTitle.FontSize = wide ? 26d : 24d;
             HeroTitle.LineHeight = wide ? 34d : 30d;
             HeroTitle.MaxHeight = wide ? 102d : 90d;
@@ -119,7 +119,7 @@ public partial class QuickStartPage : INavigableView<QuickStartViewModel>
         Grid.SetColumnSpan(PlayerActions, narrow ? 2 : 1);
         PlayerActions.HorizontalAlignment = narrow ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
         PlayerActions.Margin = narrow ? new Thickness(0, 10, 0, 0) : new Thickness(0);
-        PlayerActionDivider.Visibility = narrow ? Visibility.Collapsed : Visibility.Visible;
+        PlayerActionDivider.Visibility = narrow || !PlayerSupportDialog.IsAvailableForRelease ? Visibility.Collapsed : Visibility.Visible;
         QuickLinks.Columns = width >= 900d ? 3 : width >= 560d ? 2 : 1;
         var tutorialColumns = width >= 900d ? 2 : 1;
         TutorialsGrid.Columns = tutorialColumns;

@@ -239,7 +239,23 @@ namespace AFMediaBar.Components
         private string _actualTitle = string.Empty;   // 实际标题（不含歌词）Actual title (without lyrics)
         private string _actualArtist = string.Empty;  // 实际艺术家 Actual artist
         private bool _isLyricsSearching;              // 当前曲目是否仍在检索歌词 Whether lyrics are still being searched
-        private string DisplayedArtist => _isLyricsSearching ? Translations.Get("Lyrics.Searching") : _actualArtist;
+        /// <summary>
+        /// 第二行显示什么：取词状态优先，其次是没有播放进度时的说明，最后才是歌手。
+        /// </summary>
+        private string DisplayedArtist
+        {
+            get
+            {
+                if (_isLyricsSearching) return Translations.Get("Lyrics.Searching");
+                if (!MediaPlaybackProgressPolicy.ExplainsMissingProgress(_snapshot, PresentationSettings.LyricsEnabled))
+                    return _actualArtist;
+                // 适配过的来源多半是客户端改版让内存通道失配，提示升级才有意义；其他播放器本来就不上报，
+                // 让用户去更新也解决不了问题。
+                return Translations.Get(_snapshot.IsAdaptedSource
+                    ? "Panel.MediaBar.ProgressUnavailable.Adapted"
+                    : "Panel.MediaBar.ProgressUnavailable.Other");
+            }
+        }
 
         private bool _isPaused;        // 是否暂停 Whether paused
         private bool _isConnected;
@@ -263,8 +279,8 @@ namespace AFMediaBar.Components
         /// <summary>兜底收起比退出动画多等的余量，确保正常动画回调先跑。/ Extra margin the fallback waits beyond the exit animation, so the normal animation callback runs first.</summary>
         private static readonly TimeSpan HoverHideFallbackMargin = TimeSpan.FromMilliseconds(150);
 
-        /// <summary>暂停时盖在主封面上的遮罩不透明度，取 1 − 旧实现的封面画刷不透明度（0.4）：淡化浓度与改动前一致，只是从"压封面画刷"换成"主动盖遮罩"，理由见 <see cref="ApplyArtworkDimming"/>。颜色另由 <see cref="ApplyAppearanceSettings"/> 按任务栏表面的明暗给出。替身封面共用同一把画刷，浓度与颜色都自动跟随。/ The opacity of the scrim laid over the main artwork while paused, i.e. 1 − the cover-brush opacity the old implementation used (0.4): the dimming strength matches the previous look and only moves from "lower the cover brush" to "lay a scrim", as <see cref="ApplyArtworkDimming"/> explains. Its colour is a separate matter, set by <see cref="ApplyAppearanceSettings"/> from the taskbar surface's lightness. The stand-in cover shares the very same brush, so both strength and colour follow by themselves.</summary>
-        private const double ArtworkPausedScrimOpacity = 0.6;
+        /// <summary>暂停遮罩仅提供轻量状态提示，避免深色封面明显泛白；主封面与放大替身共用画刷。</summary>
+        private const double ArtworkPausedScrimOpacity = 0.2;
 
         private readonly DispatcherTimer _wheelTooltipTimer;
 
@@ -317,7 +333,6 @@ namespace AFMediaBar.Components
         /// </summary>
         private const double TaskbarWidgetPadding = SpectrumPresentationPolicy.SurfacePaddingDip;
 
-        private const double TaskbarCoveredBlurRadius = 4;
         private const double TaskbarCoveredOpacity = 0.32;
 
         /// <summary>
@@ -507,7 +522,7 @@ namespace AFMediaBar.Components
         /// </summary>
         private void ReassertQuickLaunchTooltip()
         {
-            if (!CanShowPlayerTooltip || !SongImageBorder.IsMouseOver)
+            if (!_quickLaunchSettings.ShowTooltips || !CanShowPlayerTooltip || !SongImageBorder.IsMouseOver)
             {
                 return;
             }
@@ -718,7 +733,7 @@ namespace AFMediaBar.Components
             var action = ChordWheelHeld ? settings.ChordWheelAction : settings.PrimaryWheelAction;
             var owner = _isConnected
                 ? settings.ShowWheelTooltips && action != WheelAction.Disabled ? _artworkWheelTooltip : null
-                : _quickLaunchTooltip.Content is null ? null : _quickLaunchTooltip;
+                : !_quickLaunchSettings.ShowTooltips || _quickLaunchTooltip.Content is null ? null : _quickLaunchTooltip;
             SetArtworkTooltipOwner(owner);
             RefreshWheelTooltip();
         }
