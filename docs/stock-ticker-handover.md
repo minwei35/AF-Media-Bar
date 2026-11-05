@@ -253,6 +253,7 @@ App.xaml.cs                                 ← AddScoped<StockTickerPage>
 | 1.6.2 | 改配置任务栏不跟着变；开关关掉组件不消失 | `AppSettings.StockTicker` 没进 `SettingsManager.RaiseChanged` 的分组 switch，任务栏宿主收不到事件 | 归入 `ExtraFeaturesSettingsChanged`；控件与服务各自订阅变更 |
 | 1.6.3 | 「内容与组件」里没有盯盘组件页签 | 只加了 `SettingsPageKey` + 页面目录，漏了 `SettingsNavigationCatalog` 的硬编码分区列表 | content 分区加入；顺带补常驻列表文案键、组件「配置」跳转、图标 |
 | 1.6.4 | 关掉总开关，那一格还在 | ① `SetStockTicker` 只处理"关→开"，关掉时布局仍写可见；② 布局条目可以压过开关；③ 宽度未变时尺寸请求被去重，几何不重算 | 双向写布局 + `ResolveAll` 闸门（总开关唯一权威）+ 控件主动重算几何 |
+| 1.6.5 | **价格不自动跳，只有动设置时才变一次** | `StockChanged` 在后台线程收到事件时只把"重绘"排到 UI 线程，重绘读的是 UI 线程上的旧字段 `_stockSnapshot`，于是画面永远停在最后一次 UI 线程刷新的值（打开设置页改一项 = 一次 UI 线程刷新）。行情源本身是正常的（`_stock_verify` 实测 2 秒间隔 9 秒内 5 次事件） | 把"读最新快照"一起搬进 UI 线程（`ApplyLatestSnapshot()`），后台分支不再只排重绘；另加每分钟一条 `[Stock] 读数:` 日志 |
 
 验证方式：`_stock_verify`（见 §11.3）里 8 项断言覆盖"默认可见 / 关掉两份布局都不可见（即使布局写着可见）/ 重新打开可见 / SetVisible 写入"。
 
@@ -388,6 +389,7 @@ Invoke-RestMethod -Method Post -Uri "$upload?name=AFMediaBar-Setup-v1.6.5-win-x6
 | 关掉开关还在 | `[Stock] 设置变更: enabled=False` 有，但组件还在 | 布局闸门失效（回归） | 检查 `ComponentLayoutPolicy.ResolveAll` 的 `Gate()` |
 | 改设置没反应 | 有 `[Stock] 设置变更` | 事件到了控件但几何没落地 | 检查 `StockSettingsChanged` 末尾的 `ApplyTaskbarSectionGeometry` |
 | 改设置没反应 | 没有 `[Stock] 设置变更` | 事件没到（`SettingsManager` 归组丢了） | 检查 `RaiseChanged` 里 `case nameof(AppSettings.StockTicker)` |
+| 价格不自动跳 | 有 `[Stock] 读数:` 但时间戳不前进 / 完全没有 | 后台事件只排了重绘，读的是旧字段 | 检查 `StockChanged` 是否走 `ApplyLatestSnapshot()`（1.6.5 修） |
 | 设置里没有「盯盘组件」页签 | — | 导航分区没登记 | 检查 `SettingsNavigationCatalog.Sections` 的 content 分区 |
 | 常驻列表里显示成「封面」 | — | 文案键映射缺失 | 检查 `TaskbarRestComponentSettingItem.ResolveNameKey` |
 | 读数是 `—` | 悬浮条提示「行情不可用 · …」 | 网络/代码格式问题 | 手工 `curl "https://qt.gtimg.cn/?q=sh600519"` 验证 |

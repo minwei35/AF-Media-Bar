@@ -26,6 +26,7 @@ public partial class TaskBarMediaControl
     private bool _stockSubscribed;
     private DispatcherTimer? _stockRotation;
     private StockTickerSnapshot _stockSnapshot = StockTickerSnapshot.Empty;
+    private DateTime _stockLoggedAt = DateTime.MinValue;
     private int _stockIndex;
 
     /// <summary>绑定行情源：只换订阅，不接管服务的启动与释放。</summary>
@@ -85,9 +86,7 @@ public partial class TaskBarMediaControl
         }
 
         _stockIndex = 0;
-        _stockSnapshot = _stockSource?.Snapshot ?? StockTickerSnapshot.Empty;
-        ApplyStockSettings();
-        RefreshStockReadout();
+        ApplyLatestSnapshot();
         var settings = PresentationSettings.StockTicker.Normalize();
         AppLogService.Current?.Info("Stock", "设置变更: enabled=" + settings.Enabled + " codes=" + settings.Codes.Count +
             " showName=" + settings.ShowName + " showPercent=" + settings.ShowPercent + " rotate=" + settings.RotateSeconds);
@@ -103,10 +102,20 @@ public partial class TaskBarMediaControl
     {
         if (!Dispatcher.CheckAccess())
         {
-            Dispatcher.BeginInvoke(new Action(RefreshStockReadout), DispatcherPriority.Background);
+            // 行情事件在后台线程上，"读最新快照"这一步必须一起搬到 UI 线程：只把绘制排过去的话，
+            // 绘制读的是 UI 线程上那份旧字段，价格会一直停在最后一次 UI 线程刷新的值。
+            // The quote event runs on a background thread, so reading the latest snapshot has to move to the UI thread as well: dispatching
+            // only the repaint makes it read the stale field left on the UI thread, freezing the price at the last UI-thread refresh.
+            Dispatcher.BeginInvoke(new Action(ApplyLatestSnapshot), DispatcherPriority.Background);
             return;
         }
 
+        ApplyLatestSnapshot();
+    }
+
+    /// <summary>把行情源的当前快照读到字段上并重绘；只在 UI 线程调用。</summary>
+    private void ApplyLatestSnapshot()
+    {
         _stockSnapshot = _stockSource?.Snapshot ?? StockTickerSnapshot.Empty;
         ApplyStockSettings();
         RefreshStockReadout();
@@ -168,6 +177,13 @@ public partial class TaskBarMediaControl
         var position = quotes.Count > 1 ? " · " + (_stockIndex + 1) + "/" + quotes.Count : string.Empty;
         TaskbarStockSurface.ToolTip = summary + position;
         AutomationProperties.SetName(TaskbarStockSurface, summary);
+        // 一分钟一条读数日志：既能把"界面到底有没有跟着行情走"记录下来，也不会把日志刷爆。
+        // One readout log line per minute records whether the interface is actually following the quotes without flooding the log.
+        if (DateTime.UtcNow - _stockLoggedAt > TimeSpan.FromSeconds(60))
+        {
+            _stockLoggedAt = DateTime.UtcNow;
+            AppLogService.Current?.Info("Stock", "读数: " + summary + position);
+        }
     }
 
     private string DescribeEmpty(StockTickerSettings settings, StockTickerSnapshot snapshot)
