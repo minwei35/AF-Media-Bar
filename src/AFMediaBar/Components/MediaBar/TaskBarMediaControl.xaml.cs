@@ -1452,7 +1452,8 @@ namespace AFMediaBar.Components
                 experience.OutputDeviceVisible,
                 experience.VolumeVisible,
                 experience.ArtworkVisible, experience.InputDeviceVisible, _batteryCanShow,
-                PresentationSettings.StockTicker.Enabled);
+                PresentationSettings.StockTicker.Enabled &&
+                StockSchedulePolicy.IsVisibleNow(PresentationSettings.StockTicker));
 
         /// <summary>
         /// 一个静置层组件占用的固定宽度；媒体文字不吃固定宽度，它取剩余长度。

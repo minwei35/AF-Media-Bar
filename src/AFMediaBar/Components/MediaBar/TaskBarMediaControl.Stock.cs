@@ -25,6 +25,8 @@ public partial class TaskBarMediaControl
     private StockQuoteService? _stockSource;
     private bool _stockSubscribed;
     private DispatcherTimer? _stockRotation;
+    private DispatcherTimer? _stockScheduleTimer;
+    private bool _stockScheduleVisible;
     private StockTickerSnapshot _stockSnapshot = StockTickerSnapshot.Empty;
     private DateTime _stockLoggedAt = DateTime.MinValue;
     private int _stockIndex;
@@ -52,6 +54,12 @@ public partial class TaskBarMediaControl
         _stockRotation ??= new DispatcherTimer(DispatcherPriority.Background, Dispatcher);
         _stockRotation.Tick -= StockRotation_Tick;
         _stockRotation.Tick += StockRotation_Tick;
+        _stockScheduleTimer ??= new DispatcherTimer(DispatcherPriority.Background, Dispatcher);
+        _stockScheduleTimer.Tick -= StockScheduleTick;
+        _stockScheduleTimer.Tick += StockScheduleTick;
+        _stockScheduleVisible = StockSchedulePolicy.IsVisibleNow(PresentationSettings.StockTicker);
+        _stockScheduleTimer.Interval = TimeSpan.FromSeconds(30);
+        _stockScheduleTimer.Start();
         ApplyStockSettings();
         StockChanged(this, EventArgs.Empty);
     }
@@ -67,6 +75,11 @@ public partial class TaskBarMediaControl
         {
             _stockRotation.Stop();
             _stockRotation.Tick -= StockRotation_Tick;
+        }
+        if (_stockScheduleTimer is not null)
+        {
+            _stockScheduleTimer.Stop();
+            _stockScheduleTimer.Tick -= StockScheduleTick;
         }
     }
 
@@ -147,7 +160,23 @@ public partial class TaskBarMediaControl
         RefreshStockReadout();
     }
 
-    /// <summary>把当前这一只的读数写进两行文字与提示；没有数据时给一个中性占位符。</summary>
+        /// <summary>
+    /// 复查显示时段：到点自己翻显隐，不用等用户动设置。收盘后那次切换会把整条媒体栏的宽度还回去。
+    /// Rechecks the display window so the component flips on its own at the boundary instead of waiting for a settings change.
+    /// </summary>
+    private void StockScheduleTick(object? sender, EventArgs args)
+    {
+        var visible = StockSchedulePolicy.IsVisibleNow(PresentationSettings.StockTicker.Normalize());
+        if (visible == _stockScheduleVisible) return;
+        _stockScheduleVisible = visible;
+        AppLogService.Current?.Info("Stock", "显示时段切换: visible=" + visible + " 时刻=" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        if (!IsLoaded) return;
+        ApplyTaskbarSectionGeometry(_isVertical ? MainBorder.Height : MainBorder.Width);
+        RefreshDesiredSize();
+        if (visible) RefreshStockReadout();
+    }
+
+/// <summary>把当前这一只的读数写进两行文字与提示；没有数据时给一个中性占位符。</summary>
     private void RefreshStockReadout()
     {
         var settings = PresentationSettings.StockTicker.Normalize();

@@ -39,6 +39,11 @@ public sealed record StockTickerSettings
 
     /// <summary>组件里轮流显示每只股票的时间（秒）；小于等于 0 表示停在第一只。</summary>
     public int RotateSeconds { get; init; } = DefaultRotateSeconds;
+    /// <summary>
+    /// 是否只在显示时段（周一至周五 09:00–16:00）显示。关闭后恒显。
+    /// Whether to show only inside the display window (Mon–Fri 09:00–16:00). When off the component is always shown.
+    /// </summary>
+    public bool ScheduleEnabled { get; init; } = true;
 
     /// <summary>是否显示证券简称；关掉只留价格，给极窄的媒体栏留出空间。</summary>
     public bool ShowName { get; init; } = true;

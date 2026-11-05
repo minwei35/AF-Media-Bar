@@ -2,7 +2,7 @@
 
 > 目的：把"在 AF Media Bar 上加一个任务栏股票盯盘组件"这件事的**现状、结构、踩过的坑、后续怎么改**写在一处。新会话不用重新摸代码，也不用再踩一遍已经踩过的坑。
 > 面向：后续接手优化的人 / AI 会话。
-> 最后更新：1.6.4（2026-11-04）
+> 最后更新：1.6.6（2026-11-05）
 
 ---
 
@@ -11,7 +11,7 @@
 | 项 | 值 |
 |---|---|
 | 这是什么东西 | 上游 [AF Media Bar](https://github.com/Fervent-Tempo/AF-Media-Bar) 的个人二开版本，在任务栏媒体栏里加了一个**股票盯盘组件** |
-| 当前版本 | **1.6.4**（上游 1.6.0 + 盯盘组件 + 4 轮修复） |
+| 当前版本 | **1.6.6**（上游 1.6.0 + 盯盘组件 + 6 轮修复） |
 | 代码位置 | `C:\Users\minwe\Desktop\ai相关\AF-Media-Bar` |
 | 你的 fork | https://github.com/minwei35/AF-Media-Bar ，分支 **`stock-ticker`**（默认 `main` 保持上游原样） |
 | 安装包 | https://github.com/minwei35/AF-Media-Bar/releases/tag/stock-v1.6.4 → `AFMediaBar-Setup-v1.6.4-win-x64.exe`（106.2 MB） |
@@ -73,6 +73,7 @@ release：只保留 stock-v1.6.4（旧三个的 release 对象已删，tag 保�
 | `ShowName` 显示简称 | 开 | — | 极窄媒体栏可关 |
 | `ShowPercent` 显示涨跌幅 | 开 | — | 关掉只留价格 |
 | `SwapColors` 绿涨红跌 | 关 | — | 打开后反色 |
+| `ScheduleEnabled` 只在 9:00–16:00 显示 | **开** | — | 周一至周五 09:00–16:00 显示，其余时间隐藏（`StockSchedulePolicy`） |
 
 配置存放：`%LOCALAPPDATA%\AFMediaBar\settings.json` 的 `StockTicker` 节点（与上游共用同一份文件，覆盖安装不丢）：
 
@@ -253,6 +254,7 @@ App.xaml.cs                                 ← AddScoped<StockTickerPage>
 | 1.6.2 | 改配置任务栏不跟着变；开关关掉组件不消失 | `AppSettings.StockTicker` 没进 `SettingsManager.RaiseChanged` 的分组 switch，任务栏宿主收不到事件 | 归入 `ExtraFeaturesSettingsChanged`；控件与服务各自订阅变更 |
 | 1.6.3 | 「内容与组件」里没有盯盘组件页签 | 只加了 `SettingsPageKey` + 页面目录，漏了 `SettingsNavigationCatalog` 的硬编码分区列表 | content 分区加入；顺带补常驻列表文案键、组件「配置」跳转、图标 |
 | 1.6.4 | 关掉总开关，那一格还在 | ① `SetStockTicker` 只处理"关→开"，关掉时布局仍写可见；② 布局条目可以压过开关；③ 宽度未变时尺寸请求被去重，几何不重算 | 双向写布局 + `ResolveAll` 闸门（总开关唯一权威）+ 控件主动重算几何 |
+| 1.6.6 | 收盘后组件仍占着任务栏位置 | 原先只有总开关，没有时间维度 | 新增 `ScheduleEnabled` + `StockSchedulePolicy`（周一至周五 09:00–16:00，右端开区间），接进 `ResolveAll` 闸门与控件显隐输入；控件用 30 秒 `DispatcherTimer` 复查，到点自己翻 |
 | 1.6.5 | **价格不自动跳，只有动设置时才变一次** | `StockChanged` 在后台线程收到事件时只把"重绘"排到 UI 线程，重绘读的是 UI 线程上的旧字段 `_stockSnapshot`，于是画面永远停在最后一次 UI 线程刷新的值（打开设置页改一项 = 一次 UI 线程刷新）。行情源本身是正常的（`_stock_verify` 实测 2 秒间隔 9 秒内 5 次事件） | 把"读最新快照"一起搬进 UI 线程（`ApplyLatestSnapshot()`），后台分支不再只排重绘；另加每分钟一条 `[Stock] 读数:` 日志 |
 
 验证方式：`_stock_verify`（见 §11.3）里 8 项断言覆盖"默认可见 / 关掉两份布局都不可见（即使布局写着可见）/ 重新打开可见 / SetVisible 写入"。

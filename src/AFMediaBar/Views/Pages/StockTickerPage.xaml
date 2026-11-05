@@ -48,6 +48,12 @@
                     </components:SettingsRow>
                 </StackPanel>
             </components:SettingsGroup>
-        </StackPanel>
-    </components:SettingsPageLayout>
+            <components:SettingsGroup GroupId="Widgets.Stock.Schedule" Header="{DynamicResource Loc.Stock.Schedule.Title}" Description="{DynamicResource Loc.Stock.Schedule.Description}" Icon="{ui:SymbolIcon Clock24}">
+                <StackPanel>
+                    <components:SettingsRow Description="{DynamicResource Loc.Stock.Schedule.Enabled.Description}" Icon="{ui:SymbolIcon Clock24}" Title="{DynamicResource Loc.Stock.Schedule.Enabled.Title}" KeepControlInline="True">
+                        <ui:ToggleSwitch IsChecked="{Binding ViewModel.Stock.ScheduleEnabled, Mode=TwoWay}"/>
+                    </components:SettingsRow>
+                </StackPanel>
+            </components:SettingsGroup>
+        </StackPanel>    </components:SettingsPageLayout>
 </Page>

@@ -3892,4 +3892,8 @@
   <data name="Stock.Cadence.Description" xml:space="preserve"><value>行情多久拉一次，以及组件在多只自选之间多久换一次</value></data>
   <data name="Stock.Readout.Title" xml:space="preserve"><value>读数显示</value></data>
   <data name="Stock.Readout.Description" xml:space="preserve"><value>组件里显示哪些内容、涨跌用什么颜色</value></data>
+  <data name="Stock.Schedule.Title" xml:space="preserve"><value>显示时段</value></data>
+  <data name="Stock.Schedule.Description" xml:space="preserve"><value>只在开盘时段显示，其余时间把任务栏位置还回去</value></data>
+  <data name="Stock.Schedule.Enabled.Title" xml:space="preserve"><value>只在 9:00–16:00 显示</value></data>
+  <data name="Stock.Schedule.Enabled.Description" xml:space="preserve"><value>周一至周五 09:00–16:00 显示，其余时间（含周末）隐藏；按本机时钟判断，跨过时间点后 30 秒内自动切换</value></data>
 </root>

@@ -3892,4 +3892,8 @@ The full-panel entry opens on click or hover. Bluetooth battery remains an exper
   <data name="Stock.Cadence.Description" xml:space="preserve"><value>How often quotes are polled, and how often the component switches between instruments</value></data>
   <data name="Stock.Readout.Title" xml:space="preserve"><value>Readout</value></data>
   <data name="Stock.Readout.Description" xml:space="preserve"><value>What the component shows and which colours the up and down readings use</value></data>
+  <data name="Stock.Schedule.Title" xml:space="preserve"><value>Display window</value></data>
+  <data name="Stock.Schedule.Description" xml:space="preserve"><value>Show the ticker only during market hours and hand the taskbar space back afterwards</value></data>
+  <data name="Stock.Schedule.Enabled.Title" xml:space="preserve"><value>Show only between 09:00 and 16:00</value></data>
+  <data name="Stock.Schedule.Enabled.Description" xml:space="preserve"><value>Shown Monday to Friday from 09:00 to 16:00 and hidden otherwise, weekends included; judged by the local clock and switched within 30 seconds of the boundary</value></data>
 </root>

@@ -19,6 +19,9 @@ public sealed partial class StockTickerSettingsViewModel : ObservableObject, IDi
 
     /// <summary>是否在任务栏显示盯盘组件。/ Whether the ticker shows on the taskbar.</summary>
     public bool Enabled { get => Current.Enabled; set => Update(Current with { Enabled = value }); }
+    /// <summary>是否只在显示时段（周一至周五 09:00–16:00）显示。/ Whether to show only inside the display window.</summary>
+    public bool ScheduleEnabled { get => Current.ScheduleEnabled; set => Update(Current with { ScheduleEnabled = value }); }
+
 
     /// <summary>是否显示证券简称。/ Whether the instrument name is shown.</summary>
     public bool ShowName { get => Current.ShowName; set => Update(Current with { ShowName = value }); }

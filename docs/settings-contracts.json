@@ -314,7 +314,8 @@
       "rotateSeconds": "unreleased",
       "showName": "unreleased",
       "showPercent": "unreleased",
-      "swapColors": "unreleased"
+      "swapColors": "unreleased",
+      "scheduleEnabled": "unreleased"
     },
     "systemMemoryOptimization": {
       "$release": "v1.6.0",

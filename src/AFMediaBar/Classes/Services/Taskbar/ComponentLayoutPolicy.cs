@@ -63,7 +63,7 @@ public static class ComponentLayoutPolicy
         // The stock ticker's master switch is the only authority: a stored layout entry — a stale "hidden" written by an older version or a
         // stale "visible" left after switching off — must not override it.
         ComponentLayoutEntry Gate(ComponentLayoutEntry entry) => entry.Component == TaskbarRestComponent.StockTicker
-            ? entry with { IsVisible = settings.StockTicker.Enabled }
+            ? entry with { IsVisible = settings.StockTicker.Enabled && StockSchedulePolicy.IsVisibleNow(settings.StockTicker) }
             : entry;
         var gated = ordered.Select(Gate).ToArray();
         return state == BarLayoutState.Resident
@@ -138,7 +138,7 @@ public static class ComponentLayoutPolicy
         bool Visible(TaskbarRestComponent component) => component == TaskbarRestComponent.StockTicker
             // 盯盘组件不看媒体状态：没有媒体时它照样要显示，否则一停歌就看不见自选股。
             // The stock ticker ignores the media state: it has to stay visible with no media, otherwise the watchlist disappears as soon as playback stops.
-            ? settings.StockTicker.Enabled
+            ? settings.StockTicker.Enabled && StockSchedulePolicy.IsVisibleNow(settings.StockTicker)
             : state == BarLayoutState.Idle ? idle.Contains(component) : component switch
         {
             TaskbarRestComponent.Artwork => experience.ArtworkVisible,
